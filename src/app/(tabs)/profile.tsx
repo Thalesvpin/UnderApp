@@ -5,28 +5,28 @@ import { Link } from "expo-router";
 
 export default function Profile(){
 	return(
-		<ScrollView>
-			<View style={globalStyles.hCenter}>
+		<ScrollView style={[globalStyles.bgColor]}>
+			<View style={[globalStyles.hCenter, styles.pageWrapper]}>
 				<Image style={styles.profilePicture} source={require("@/assets/mordecai.png")}></Image>
 				<Text>Nome: Thales</Text>
 				
 				<View>
-					<Link href="/wip" asChild>
+					<Link href="/wip" asChild style={styles.btnGap}>
 						<Button label="Editar Perfil" />
 					</Link>
-					<Link href="/wip" asChild>
+					<Link href="/wip" asChild style={styles.btnGap}>
 						<Button label="Meus Relatos" />
 					</Link>
-					<Link href="/wip" asChild>
+					<Link href="/wip" asChild style={styles.btnGap}>
 						<Button label="Gerenciar Áreas Monitoradas" />
 					</Link>
-					<Link href="/wip" asChild>
+					<Link href="/wip" asChild style={styles.btnGap}>
 						<Button label="Configurações do App" />
 					</Link>
-					<Link href="/wip" asChild>
+					<Link href="/wip" asChild style={styles.btnGap}>
 						<Button label="Gerar Relatório" onPress={donwloadReport} />
 					</Link>
-					<Link href="/" asChild>
+					<Link href="/" dismissTo asChild style={styles.btnGap}>
 						<Button label="Sair" onPress={logOut} />
 					</Link>
 				</View>
@@ -54,5 +54,14 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.25,
 		shadowRadius: 4,
 		elevation: 5,
+	},
+	pageWrapper: {
+		// marginTop: "10%",
+		paddingTop: "15%",
+	},
+	btnGap: {
+		marginTop: 5,
+		marginBottom: 5,
 	}
+
 })

@@ -1,6 +1,9 @@
 import { StyleSheet } from "react-native";
 
 export const globalStyles = StyleSheet.create({
+	bgColor:{
+		backgroundColor: '#d2e8ff',
+	},
 	title:{
 		fontSize: 24,
 		fontWeight: 'bold',

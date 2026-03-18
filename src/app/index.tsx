@@ -7,7 +7,7 @@ import { globalStyles } from '@/stylesheets/global-stylesheet'
 
 export default function Index() {
 	return(
-		<KeyboardAvoidingView style={{flex: 1}} behavior={Platform.select({ios: 'padding', android: 'height'})}>
+		<KeyboardAvoidingView style={[{flex: 1}, globalStyles.bgColor]} behavior={Platform.select({ios: 'padding', android: 'height'})}>
 			<ScrollView contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps='handled'>
 				<View style={globalStyles.loginSignupContainer}>
 					<Image style={globalStyles.logo} source={require("@/assets/logo.png")} />
@@ -17,7 +17,7 @@ export default function Index() {
 						<Input placeholder='Insira seu email' keyboardType='email-address'/>
 						<Text>Senha</Text>
 						<PasswordInput placeholder='Insira sua senha'/>
-						<Link href={"/profile"} asChild>
+						<Link href={"/profile"} replace asChild>
 							<Button label='Entrar' onPress={signIn}/>
 						</Link>
 						<Link href="/forgot-password" style={{marginTop: 20, color: '#007bff'}}>Esqueceu sua senha?</Link>
