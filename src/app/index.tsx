@@ -7,7 +7,7 @@ import { globalStyles } from '@/stylesheets/global-stylesheet'
 
 export default function Index() {
 	return(
-		<KeyboardAvoidingView style={[{flex: 1}, globalStyles.bgColor]} behavior={Platform.select({ios: 'padding', android: 'height'})}>
+		<KeyboardAvoidingView style={[{flex: 1}, globalStyles.bgColor]} behavior={Platform.select({ios: 'padding', android: 'padding'})}>
 			<ScrollView contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps='handled'>
 				<View style={globalStyles.loginSignupContainer}>
 					<Image style={globalStyles.logo} source={require("@/assets/logo.png")} />
