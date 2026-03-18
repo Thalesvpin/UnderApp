@@ -1,11 +1,63 @@
 import { Input } from '@/components/input'
 import { Button } from '@/components/button'
 import { View, Text, StyleSheet, Image, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 import { PasswordInput } from '@/components/password-input'
 import { globalStyles } from '@/stylesheets/global-stylesheet'
+import { useState } from 'react'
+import AppLoading from 'expo-app-loading'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
+function test(){
+	console.log('3 test function');
+	
+}
+
+function signIn(){
+	console.log('Signing in...')
+}
 
 export default function Index() {
+	const [isReady, setIsReady] = useState(false);
+	const [userToken, setUserToken] = useState<string | null>(null);
+
+	const checkUserLoggedIn = async () => {
+		console.log('2 quero isso');
+		AsyncStorage.getItem('userToken')
+			.then((token) => {
+				if (token !== null) {
+					setUserToken(JSON.parse(token));
+				}
+				else{
+					setUserToken(null);
+				}
+			})
+			.catch(error => {
+				console.warn('Error checking user token:', error);
+			})
+		;
+	}
+
+	if(!isReady){
+		console.log('1 dentro do if !isReady');
+		return(
+			<AppLoading 
+				startAsync={checkUserLoggedIn}
+				onFinish={() => {
+					setIsReady(true);
+					test();
+				}}
+				onError={console.warn}
+			/>
+		)
+	}
+
+	console.log('4 quando isso veio?');
+
+	if(userToken !== null){
+		router.replace('/(tabs)/map');
+	}
+
 	return(
 		<KeyboardAvoidingView style={[{flex: 1}, globalStyles.bgColor]} behavior={Platform.select({ios: 'padding', android: 'padding'})}>
 			<ScrollView contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps='handled'>
@@ -29,10 +81,6 @@ export default function Index() {
 			</ScrollView>
 		</KeyboardAvoidingView>
 	)
-}
-
-function signIn(){
-	console.log('Signing in...')
 }
 
 const styles = StyleSheet.create({
