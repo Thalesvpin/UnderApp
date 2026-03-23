@@ -4,9 +4,10 @@ import { View, Text, StyleSheet, Image, ScrollView, KeyboardAvoidingView, Platfo
 import { Link, router } from 'expo-router'
 import { PasswordInput } from '@/components/password-input'
 import { globalStyles } from '@/stylesheets/global-stylesheet'
-import { useState } from 'react'
-import AppLoading from 'expo-app-loading'
+import { useContext, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as SplashScreen from 'expo-splash-screen'
+import { AuthContext } from '@/utils/authContext'
 
 function test(){
 	console.log('3 test function');
@@ -15,48 +16,53 @@ function test(){
 
 function signIn(){
 	console.log('Signing in...')
+	
 }
 
-export default function Index() {
+export default function Login() {
 	const [isReady, setIsReady] = useState(false);
 	const [userToken, setUserToken] = useState<string | null>(null);
 
+	const authContext = useContext(AuthContext);
+
 	const checkUserLoggedIn = async () => {
-		console.log('2 quero isso');
-		AsyncStorage.getItem('userToken')
-			.then((token) => {
-				if (token !== null) {
-					setUserToken(JSON.parse(token));
+		const token = await AsyncStorage.getItem('userToken')
+		if (token !== null && token !== undefined) {
+			setUserToken(JSON.parse(token));
+			return JSON.parse(token);	
+		}
+		else{
+			setUserToken(null);
+			return null;
+		}
+	}
+
+	useEffect(() => {
+		(async () => {
+			let token = null;
+			await SplashScreen.preventAutoHideAsync();
+			try {
+				token = await checkUserLoggedIn();
+				await SplashScreen.hideAsync();
+				setIsReady(true);
+				if(token !== null && token !== undefined){
+					authContext.logIn();
+					router.replace('/(tabs)');
 				}
-				else{
-					setUserToken(null);
-				}
-			})
-			.catch(error => {
-				console.warn('Error checking user token:', error);
-			})
-		;
-	}
-
-	if(!isReady){
-		console.log('1 dentro do if !isReady');
-		return(
-			<AppLoading 
-				startAsync={checkUserLoggedIn}
-				onFinish={() => {
-					setIsReady(true);
-					test();
-				}}
-				onError={console.warn}
-			/>
-		)
-	}
-
-	console.log('4 quando isso veio?');
-
-	if(userToken !== null){
-		router.replace('/(tabs)/map');
-	}
+			}
+			finally{
+			}
+			// finally {
+			// 	console.log('finally: ', userToken);
+			// 	setIsReady(true);
+			// 	await SplashScreen.hideAsync();
+			// 	if(token !== null){
+			// 		console.log('4');
+			// 		router.replace('/(tabs)');
+			// 	}
+			// }
+		})();
+	}, []);
 
 	return(
 		<KeyboardAvoidingView style={[{flex: 1}, globalStyles.bgColor]} behavior={Platform.select({ios: 'padding', android: 'padding'})}>
@@ -69,8 +75,8 @@ export default function Index() {
 						<Input placeholder='Insira seu email' keyboardType='email-address'/>
 						<Text>Senha</Text>
 						<PasswordInput placeholder='Insira sua senha'/>
-						<Link href={"/profile"} replace asChild>
-							<Button label='Entrar' onPress={signIn}/>
+						<Link href={"/(tabs)"} replace asChild>
+							<Button label='Entrar' onPress={authContext.logIn}/>
 						</Link>
 						<Link href="/forgot-password" style={{marginTop: 20, color: '#007bff'}}>Esqueceu sua senha?</Link>
 					</View>

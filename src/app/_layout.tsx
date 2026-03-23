@@ -1,16 +1,20 @@
+import { AuthProvider } from "@/utils/authContext";
 import { Stack } from "expo-router";
 
-export default function Layout(){
+export default function RootLayout(){
 	return(
-		<Stack
-			screenOptions={{
-				headerShown: false,
-				animation: "slide_from_right",
-			}}
-		>
-			<Stack.Screen name="index" options={{ headerShown: false }} />
-			<Stack.Screen name="signup" options={{ headerShown: false }} />
-			<Stack.Screen name="forgot-password" options={{ title: 'Esqueci minha senha' }} />
-		</Stack>
+		<AuthProvider>
+			<Stack
+				screenOptions={{
+					headerShown: false,
+					animation: "slide_from_right",
+				}}
+			>
+				<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+				<Stack.Screen name="login" options={{ headerShown: false }} />
+				<Stack.Screen name="signup" options={{ headerShown: false }} />
+				<Stack.Screen name="forgot-password" options={{ title: 'Esqueci minha senha' }} />
+			</Stack>
+		</AuthProvider>
 	)
 }
