@@ -119,7 +119,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   button: {
     position: "absolute",
-    bottom: 40,
+    bottom: 80,
     right: 20,
     backgroundColor: "#fff",
     padding: 12,
