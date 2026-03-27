@@ -9,10 +9,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as SplashScreen from 'expo-splash-screen'
 import { AuthContext } from '@/utils/authContext'
 
-function test(){
-	console.log('3 test function');
-	
-}
 
 function signIn(){
 	console.log('Signing in...')

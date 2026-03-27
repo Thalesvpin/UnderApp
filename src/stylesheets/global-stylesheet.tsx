@@ -26,9 +26,6 @@ export const globalStyles = StyleSheet.create({
 	},
 	hCenter: {
 		width: '100%',
-		// justifyContent: 'center',
 		alignItems: 'center',
-		borderWidth: 1,
-		borderColor: '#ff0000',
 	}
 })
