@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ColorValue, StyleSheet, TouchableOpacity, View } from "react-native";
 import { default as Map, default as MapView, Marker } from "react-native-maps";
 
@@ -24,15 +24,32 @@ export default function Index() {
 		{ id: 2, icon: 'location', color: 'blue', latitude: -22.5094878268097, longitude: -43.182550472633665 },
   ]);
   const mapRef = useRef<MapView | null>(null);
+  const watchRef = useRef<Location.LocationSubscription | null>(null);
 
-  const startTracking = async () => {
+  const stopTracking = useCallback(() => {
+    watchRef.current?.remove();
+    watchRef.current = null;
+  }, []);
+
+  const startTracking = useCallback(async () => {
     const hasPermission = await Location.requestForegroundPermissionsAsync();
     if (hasPermission.status !== "granted") return;
 
     const isEnabled = await Location.hasServicesEnabledAsync();
     if (!isEnabled) return;
 
-    await Location.watchPositionAsync(
+    stopTracking();
+
+    try {
+      const snap = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.High,
+      });
+      setCoordinates(snap.coords);
+    } catch {
+      /* GPS pode acabar de ser ligado; o watch abaixo preenche em seguida */
+    }
+
+    watchRef.current = await Location.watchPositionAsync(
       {
         accuracy: Location.Accuracy.High,
         timeInterval: 5000,
@@ -42,11 +59,12 @@ export default function Index() {
         setCoordinates(location.coords);
       },
     );
-  };
+  }, [stopTracking]);
 
   useEffect(() => {
     startTracking();
-  }, []);
+    return () => stopTracking();
+  }, [startTracking, stopTracking]);
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -58,7 +76,7 @@ export default function Index() {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [coordinates]);
+  }, [coordinates, startTracking]);
 
   const handleCenter = () => {
     if (!coordinates) {
@@ -95,8 +113,19 @@ export default function Index() {
 						longitudeDelta: 0.005,
 					}
 				}
-        showsUserLocation={true}
+        showsUserLocation={false}
 			>
+				{coordinates ? (
+					<Marker
+						coordinate={{
+							latitude: coordinates.latitude,
+							longitude: coordinates.longitude,
+						}}
+						anchor={{ x: 0.5, y: 0.5 }}
+					>
+						<View style={styles.userDot} />
+					</Marker>
+				) : null}
 				{markers.map(marker => (
 					<Marker
 						key={marker.id}
@@ -117,6 +146,14 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
+  userDot: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: "#4285F4",
+    borderWidth: 3,
+    borderColor: "#fff",
+  },
   button: {
     position: "absolute",
     bottom: 80,
