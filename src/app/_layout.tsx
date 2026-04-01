@@ -1,3 +1,4 @@
+import { globalStyles } from "@/stylesheets/global-stylesheet";
 import { AuthProvider } from "@/utils/authContext";
 import { Stack } from "expo-router";
 
@@ -8,6 +9,7 @@ export default function RootLayout(){
 				screenOptions={{
 					headerShown: false,
 					animation: "slide_from_right",
+					contentStyle: globalStyles.bgColor,
 				}}
 			>
 				<Stack.Screen name="(tabs)" options={{ headerShown: false }} />

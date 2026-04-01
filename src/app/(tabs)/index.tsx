@@ -2,7 +2,9 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ColorValue, StyleSheet, TouchableOpacity, View } from "react-native";
-import { default as Map, default as MapView, Marker } from "react-native-maps";
+import { default as Map, default as MapView, Marker, UrlTile } from "react-native-maps";
+
+const MAPBOX_TOKEN = "";
 
 const defaultCoords = {
 	latitude: -22.511593970585,
@@ -115,6 +117,11 @@ export default function Index() {
 				}
         showsUserLocation={false}
 			>
+				<UrlTile
+					urlTemplate={`https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_TOKEN}`}
+					maximumZ={19}
+					flipY={false}
+				/>
 				{coordinates ? (
 					<Marker
 						coordinate={{
