@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ColorValue, StyleSheet, TouchableOpacity, View } from "react-native";
 import { default as Map, default as MapView, Marker, UrlTile } from "react-native-maps";
 
-const MAPBOX_TOKEN = "";
+const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
 
 const defaultCoords = {
 	latitude: -22.511593970585,
