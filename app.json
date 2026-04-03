@@ -19,12 +19,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.thalesvpinheiro.underapp",
-			"config": {
-				"googleMaps": {
-					"apiKey": "AIzaSyDqgq0ax_HNzF9uBVBpC7C_FQ4N9zJlW48"
-				}
-			}
+      "package": "com.thalesvpinheiro.underapp"
     },
     "web": {
       "output": "static",

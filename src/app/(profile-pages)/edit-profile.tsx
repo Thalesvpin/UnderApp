@@ -1,21 +1,24 @@
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { globalStyles } from "@/stylesheets/global-stylesheet";
+import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { View, Text, KeyboardAvoidingView, ScrollView, StyleSheet, Platform } from "react-native";
+import { View, Text, KeyboardAvoidingView, ScrollView, StyleSheet, Platform, Pressable, Image } from "react-native";
 
 
 export default function EditProfile() {
-	const [userInfo, setUserInfo] = useState({name: '', email: ''});
+	const [userInfo, setUserInfo] = useState({name: '', email: '', cpf: '', cep: ''});
 	
 	async function getUserInfo() {
 		console.log("Getting user info...");
 
 		let username = await AsyncStorage.getItem('username');
 		let email = await AsyncStorage.getItem('email');
+		setUserInfo({name: 'Thales', email: 'thales@email.com', cpf: '137729996111', cep: ''});
 		if(username && email){
-			setUserInfo({name: username, email: email});
+			setUserInfo({name: username, email: email, cpf: '137729996111', cep: ''});
 		}
 	}
 
@@ -27,18 +30,56 @@ export default function EditProfile() {
 
 	useEffect(() => {
 		getUserInfo();
+		console.log('aaa');
 	}, []);
 
 	return(
 		<KeyboardAvoidingView style={[{flex: 1}, globalStyles.bgColor]} behavior={Platform.select({ios: 'padding', android: 'padding'})}>
 			<ScrollView>
 				<View style={styles.wrapper}>
-					<View style={styles.formGroup}>
-						<Text>Nome</Text>
-						<Input value={userInfo.name} placeholder="Nome" />
-						<Text>Email</Text>
-						<Input value={userInfo.email} placeholder="Email" keyboardType='email-address'/>
-						<Button label="Salvar" />
+
+					<View style={[globalStyles.avatarWrap, styles.avatarWrap]}>
+						<Image
+							style={globalStyles.profilePicture}
+							source={require("@/assets/mordecai.png")}
+						/>
+						<Pressable
+							style={({ pressed }) => [
+								globalStyles.editAvatarBtn,
+								pressed && globalStyles.editAvatarBtnPressed,
+							]}
+							onPress={() => router.push("/edit-profile")}
+							accessibilityRole="button"
+							accessibilityLabel="Editar foto do perfil"
+						>
+							<Ionicons name="create-outline" size={22} color="#000000" />
+						</Pressable>
+					</View>
+					<View style={globalStyles.cardBg}>
+						<View style={styles.formGroup}>
+						
+							<View style={globalStyles.inputIcon}>
+								<Ionicons name="person" size={22} color="gray" />
+								<Text>Nome</Text>
+							</View>
+							<Input value={userInfo.name} onChangeText={(text) => setUserInfo({...userInfo, name: text})} placeholder="Nome" />
+							<View style={globalStyles.inputIcon}>
+								<Ionicons name="mail" size={22} color="gray" />
+								<Text>Email</Text>
+							</View>
+							<Input value={userInfo.email} onChangeText={(text) => setUserInfo({...userInfo, email: text})} placeholder="Email" keyboardType='email-address'/>
+							<View style={globalStyles.inputIcon}>
+								<Ionicons name="person" size={20} color="gray" />
+								<Text>CPF</Text>
+							</View>
+							<Input value={userInfo.cpf} style={{color: 'gray'}} editable={false} placeholder='CPF do usuário' keyboardType='numeric'/>
+							<View style={globalStyles.inputIcon}>
+								<Ionicons name="location" size={20} color="gray" />
+								<Text>CEP</Text>
+							</View>
+							<Input value={userInfo.cep} onChangeText={(text) => setUserInfo({...userInfo, cep: text})} placeholder='CEP do usuário' keyboardType='numeric'/>
+							<Button label="Salvar" />
+						</View>
 					</View>
 				</View>
 			</ScrollView>
@@ -52,8 +93,10 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
-
 	formGroup: {
-		width: '70%',
+		width: '93%',
 	},
+	avatarWrap: {
+		marginTop: 15,
+	}
 });

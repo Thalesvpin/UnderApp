@@ -14,7 +14,7 @@ export function PasswordInput({ secureTextEntry = true, ...rest }){
 					onPress={() => setHidePassword(!hidePassword)}
 				>
 					<Ionicons
-						name={hidePassword ? "lock-closed" : "lock-open"}
+						name={hidePassword ? "eye-off" : "eye"}
 						size={20}
 						color="gray"
 					/>

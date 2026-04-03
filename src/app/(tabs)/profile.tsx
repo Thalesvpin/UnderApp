@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import { useContext, useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ClickableCard } from "@/components/clickable-card";
 
 export default function Profile() {
 	const authContext = useContext(AuthContext);
@@ -33,44 +34,66 @@ export default function Profile() {
   return (
 	<ScrollView style={[globalStyles.bgColor]}>
 	  <View style={[globalStyles.hCenter, styles.pageWrapper]}>
-		<View style={styles.avatarWrap}>
-		  <Image
-		    style={styles.profilePicture}
-		    source={require("@/assets/mordecai.png")}
-		  />
-		  <Pressable
-		    style={({ pressed }) => [
-		      styles.editAvatarBtn,
-		      pressed && styles.editAvatarBtnPressed,
-		    ]}
-		    onPress={() => router.push("/edit-profile")}
-		    accessibilityRole="button"
-		    accessibilityLabel="Editar foto do perfil"
-		  >
-		    <Ionicons name="create-outline" size={22} color="#000000" />
-		  </Pressable>
-		</View>
-		<Text>NAME PLACEHOLDER{username}</Text>
+			<View style={globalStyles.avatarWrap}>
+				<Image
+					style={globalStyles.profilePicture}
+					source={require("@/assets/mordecai.png")}
+				/>
+				<Pressable
+					style={({ pressed }) => [
+						globalStyles.editAvatarBtn,
+						pressed && globalStyles.editAvatarBtnPressed,
+					]}
+					onPress={() => router.push("/edit-profile")}
+					accessibilityRole="button"
+					accessibilityLabel="Editar foto do perfil"
+				>
+					<Ionicons name="create-outline" size={22} color="#000000" />
+				</Pressable>
+			</View>
+			<Text>{username ? username : 'NAME PLACEHOLDER'}</Text>
 
-		<View>
-			{/* <Link href="/(tabs)/profile/edit-profile" asChild style={styles.btnGap}> */}
-				<Button label="Editar Perfil" onPress={addToken} style={styles.btnGap} />
-			{/* </Link> */}
-			<Link href="/wip" asChild style={styles.btnGap}>
-				<Button label="Meus Relatos" onPress={checkToken} />
-			</Link>
-			<Link href="/wip" asChild style={styles.btnGap}>
-				<Button label="Gerenciar Áreas Monitoradas" />
-			</Link>
-			<Link href="/wip" asChild style={styles.btnGap}>
-				<Button label="Configurações do App" />
-			</Link>
-			<Link href="/wip" asChild style={styles.btnGap}>
-				<Button label="Gerar Relatório" onPress={donwloadReport} />
-			</Link>
-			<Button label="Sair" style={styles.btnGap} onPress={logOut} />
+			<View style={styles.profileOptions}>
 
-		</View>
+				<ClickableCard style={styles.btnGap} onPress={addToken}>
+					<Ionicons name="person-outline" size={22} color="#000000" />
+					<Text>Editar Perfil</Text>
+				</ClickableCard>
+
+				<Link href="/wip" asChild style={styles.btnGap}>
+					<ClickableCard style={styles.btnGap} onPress={checkToken}>
+						<Ionicons name="document-text-outline" size={22} color="#000000" />
+						<Text>Meus Relatos</Text>
+					</ClickableCard>
+				</Link>
+
+				<Link href="/wip" asChild style={styles.btnGap}>
+					<ClickableCard style={styles.btnGap}>
+						<Ionicons name="map-outline" size={22} color="#000000" />
+						<Text>Gerenciar Áreas Monitoradas</Text>
+					</ClickableCard>
+				</Link>
+
+				<Link href="/wip" asChild style={styles.btnGap}>
+					<ClickableCard style={styles.btnGap}>
+						<Ionicons name="settings-outline" size={22} color="#000000" />
+						<Text>Configurações do App</Text>
+					</ClickableCard>
+				</Link> 
+
+				<Link href="/wip" asChild style={styles.btnGap}>
+					<ClickableCard style={styles.btnGap} onPress={donwloadReport}>
+						<Ionicons name="podium-outline" size={22} color="#000000" />
+						<Text>Gerar Relatório</Text>
+					</ClickableCard>
+				</Link>
+
+				<ClickableCard style={styles.btnGap} onPress={logOut}>
+					<Ionicons name="exit-outline" size={22} color="#000000" />
+					<Text>Sair</Text>
+				</ClickableCard>
+
+			</View>
 	  </View>
 	</ScrollView>
   );
@@ -91,52 +114,18 @@ function donwloadReport() {
   console.log("Downloading report...");
 }
 
-const AVATAR_SIZE = 150;
 
 const styles = StyleSheet.create({
-  avatarWrap: {
-		width: AVATAR_SIZE,
-		height: AVATAR_SIZE,
-		position: "relative",
-		alignSelf: "center",
-  },
-  profilePicture: {
-		width: AVATAR_SIZE,
-		height: AVATAR_SIZE,
-		borderRadius: AVATAR_SIZE / 2,
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.25,
-		shadowRadius: 4,
-		elevation: 5,
-  },
-  editAvatarBtn: {
-		position: "absolute",
-		right: 0,
-		bottom: 0,
-		width: 40,
-		height: 40,
-		borderRadius: 20,
-		backgroundColor: "#fff",
-		justifyContent: "center",
-		alignItems: "center",
-		borderWidth: 3,
-		borderColor: "#fff",
-		elevation: 5,
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 1 },
-		shadowOpacity: 0.5,
-		shadowRadius: 3,
-		
-  },
-  editAvatarBtnPressed: {
-		opacity: 0.85,
-  },
   pageWrapper: {
 		paddingTop: "15%",
   },
   btnGap: {
-		marginTop: 5,
-		marginBottom: 5,
+		marginTop: 6,
+		marginBottom: 6,
+		height: 60,
   },
+	profileOptions:{
+		width: '80%',
+		marginTop: 15,
+	}
 });

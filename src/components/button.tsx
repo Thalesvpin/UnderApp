@@ -16,7 +16,7 @@ export function Button({label, style, ...rest}: ButtonProps){
 const styles = StyleSheet.create({
 	button:{
 		backgroundColor: '#007bff',
-		borderRadius: 10,
+		borderRadius: 20,
 		padding: 10,
 		alignItems: 'center',
 		justifyContent: 'center',

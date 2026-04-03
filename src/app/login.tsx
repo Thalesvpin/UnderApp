@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as SplashScreen from 'expo-splash-screen'
 import { AuthContext } from '@/utils/authContext'
 import AuthService from '@/services/auth.service'
+import { Ionicons } from '@expo/vector-icons'
 
 
 function signIn(){
@@ -63,21 +64,36 @@ export default function Login() {
 		<KeyboardAvoidingView style={[{flex: 1}]} behavior={Platform.select({ios: 'padding', android: 'padding'})}>
 			<ScrollView contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps='handled'>
 				<View style={globalStyles.loginSignupContainer}>
+					
 					<Image style={globalStyles.logo} source={require("@/assets/logo.png")} />
 					<Text style={globalStyles.title}>Login</Text>
-					<View style={globalStyles.loginFields}>
-						<Text>Email</Text>
-						<Input value={email} onChangeText={setEmail} placeholder='Insira seu email' keyboardType='email-address'/>
-						<Text>Senha</Text>
-						<PasswordInput value={password} onChangeText={setPassword} placeholder='Insira sua senha'/>
-						<Link href={"/(tabs)"} replace asChild>
-							<Button label='Entrar' onPress={handleSignIn}/>
-						</Link>
-						<Link href="/forgot-password" style={{marginTop: 20, color: '#007bff'}}>Esqueceu sua senha?</Link>
+					
+					<View style={globalStyles.cardBg}>
+						<View style={globalStyles.loginFields}>
+
+							<View style={globalStyles.inputIcon}>
+								<Ionicons name="mail" size={20} color="gray" />
+								<Text>Email</Text>
+							</View>
+							<Input value={email} onChangeText={setEmail} placeholder='Insira seu email' keyboardType='email-address'/>
+
+							<View style={globalStyles.inputIcon}>
+								<Ionicons name="lock-closed" size={20} color="gray" />
+								<Text>Senha</Text>
+							</View>
+							<PasswordInput value={password} onChangeText={setPassword} placeholder='Insira sua senha'/>
+
+							<Link href={"/(tabs)"} replace asChild>
+								<Button label='Entrar' onPress={handleSignIn}/>
+							</Link>
+
+							<View style={[globalStyles.hCenter, styles.createAccountText]}>
+								<Text>Não tem uma conta?</Text>
+								<Link href="/signup" asChild><Text style={{color: '#007bff'}}>Crie uma agora</Text></Link>
+							</View>
+
+						</View>
 					</View>
-					<Link href="/signup" asChild>
-						<Button label='Criar conta' style={styles.createAccount} />
-					</Link>
 				</View>
 			</ScrollView>
 		</KeyboardAvoidingView>
@@ -93,4 +109,7 @@ const styles = StyleSheet.create({
 		width: '100%',
 		justifyContent: 'flex-start',
 	},
+	createAccountText:{
+		marginTop: 20,
+	}
 })
