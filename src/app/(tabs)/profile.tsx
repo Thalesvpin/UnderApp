@@ -22,14 +22,7 @@ export default function Profile() {
   function logOut() {
 		console.log("Loging out...");
 		authContext.logOut();
-		AsyncStorage.removeItem("userToken");
   }
-
-	function addToken() {
-		console.log("Adding token...");
-		AsyncStorage.setItem("userToken", JSON.stringify("token de teste"));
-		router.push("/edit-profile")
-	}
 
   return (
 	<ScrollView style={[globalStyles.bgColor]}>
@@ -55,7 +48,7 @@ export default function Profile() {
 
 			<View style={styles.profileOptions}>
 
-				<ClickableCard style={styles.btnGap} onPress={addToken}>
+				<ClickableCard style={styles.btnGap}>
 					<Ionicons name="person-outline" size={22} color="#000000" />
 					<Text>Editar Perfil</Text>
 				</ClickableCard>

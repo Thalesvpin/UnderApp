@@ -10,54 +10,56 @@ import * as SplashScreen from 'expo-splash-screen'
 import { AuthContext } from '@/utils/authContext'
 import AuthService from '@/services/auth.service'
 import { Ionicons } from '@expo/vector-icons'
+import * as SecureStore from 'expo-secure-store'
 
-
-function signIn(){
-	console.log('Signing in...')
-	
-}
 
 export default function Login() {
 	const [isReady, setIsReady] = useState(false);
-	const [userToken, setUserToken] = useState<string | null>(null);
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const authContext = useContext(AuthContext);
 
 	const checkUserLoggedIn = async () => {
-		const token = await AsyncStorage.getItem('userToken')
+		const token = await SecureStore.getItemAsync('token')
 		if (token !== null && token !== undefined) {
-			setUserToken(JSON.parse(token));
 			return JSON.parse(token);	
 		}
 		else{
-			setUserToken(null);
 			return null;
 		}
 	}
 
-	useEffect(() => {
-		(async () => {
-			let token = null;
-			await SplashScreen.preventAutoHideAsync();
-			try {
-				token = await checkUserLoggedIn();
-				await SplashScreen.hideAsync();
-				setIsReady(true);
-				if(token !== null && token !== undefined){
-					authContext.logIn();
-					router.replace('/(tabs)');
-				}
-			}
-			finally{
-			}
-		})();
-	}, []);
+	// useEffect(() => {
+	// 	(async () => {
+	// 		let token = null;
+	// 		await SplashScreen.preventAutoHideAsync();
+	// 		try {
+	// 			console.log('Checking user logged in...');
+	// 			token = await checkUserLoggedIn();
+	// 			await SplashScreen.hideAsync();
+	// 			setIsReady(true);
+	// 			if(token !== null && token !== undefined){
+	// 				console.log('Token found, logging in...');
+	// 				// authContext.logIn();
+	// 			}
+	// 		}
+	// 		finally{
+	// 		}
+	// 	})();
+	// }, []);
 
 	function handleSignIn(){
 		console.log('Signing in...')
-		authContext.logIn();
-		router.replace('/(tabs)');
+
+		AuthService.login({ email, password }).then(async (response) => {
+			const {data} = await response.json();
+			if(response.ok && data.token){
+				authContext.logIn(data.token);
+			}
+			else{
+				throw new Error('Failed to login');
+			}
+		});
 	}
 
 	return(

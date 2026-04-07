@@ -1,10 +1,4 @@
-const API_BASE_URL = 'https://localhost:';
-
-const endpoints = {
-	login: `${API_BASE_URL}/auth/login`,
-	signup: `${API_BASE_URL}/auth/signup`,
-	resetPassword: `${API_BASE_URL}/auth/reset-password`,
-} as const;
+const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
 export type LoginPayload = {
 	email: string;
@@ -14,16 +8,14 @@ export type LoginPayload = {
 export type SignupPayload = {
 	email: string;
 	password: string;
-	cpf: string;
+	firstName: string;
+	lastName: string;
 	cep: string;
-};
-
-export type ResetPasswordPayload = {
-	email: string;
+	// cpf: string;
 };
 
 async function login(payload: LoginPayload) {
-	return fetch(endpoints.login, {
+	return fetch(`${BASE_URL}/auth/login`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify(payload),
@@ -31,15 +23,7 @@ async function login(payload: LoginPayload) {
 }
 
 async function signup(payload: SignupPayload) {
-	return fetch(endpoints.signup, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(payload),
-	});
-}
-
-async function resetPassword(payload: ResetPasswordPayload) {
-	return fetch(endpoints.resetPassword, {
+	return fetch(`${BASE_URL}/auth/register`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify(payload),
@@ -49,7 +33,6 @@ async function resetPassword(payload: ResetPasswordPayload) {
 const AuthService = {
 	login,
 	signup,
-	resetPassword,
 };
 
 export default AuthService;

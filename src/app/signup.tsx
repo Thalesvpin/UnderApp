@@ -5,12 +5,29 @@ import { PasswordInput } from "@/components/password-input";
 import { globalStyles } from "@/stylesheets/global-stylesheet";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import AuthService from "@/services/auth.service";
+import { router } from "expo-router";
 
 export default function Signup(){
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [cpf, setCpf] = useState('');
+	const [firstName, setFirstName] = useState('');
+	const [lastName, setLastName] = useState('');
 	const [cep, setCep] = useState('');
+	const [cpf, setCpf] = useState('');
+	
+
+	function handleSignUp(){
+		console.log('Signing up...')
+		AuthService.signup({ email, password, firstName, lastName, cep })
+			.then(async (response) => {
+				const {data} = await response.json();
+				if(response.ok){
+					router.replace("/login");
+				}
+			})
+		;
+	}
 	
 	return(
 		<KeyboardAvoidingView style={[{flex: 1}]} behavior={Platform.select({ios: 'padding', android: 'padding'})}>
@@ -24,6 +41,18 @@ export default function Signup(){
 						<View style={globalStyles.loginFields}>
 
 							<View style={globalStyles.inputIcon}>
+								<Ionicons name="person" size={20} color="gray" />
+								<Text>Nome</Text>
+							</View>
+							<Input value={firstName} onChangeText={setFirstName} placeholder='Insira seu nome'/>
+							
+							<View style={globalStyles.inputIcon}>
+								<Ionicons name="person" size={20} color="gray" />
+								<Text>Sobrenome</Text>
+							</View>
+							<Input value={lastName} onChangeText={setLastName} placeholder='Insira seu sobrenome'/>
+							
+							<View style={globalStyles.inputIcon}>
 								<Ionicons name="mail" size={20} color="gray" />
 								<Text>Email</Text>
 							</View>
@@ -35,18 +64,18 @@ export default function Signup(){
 							</View>
 							<PasswordInput value={password} onChangeText={setPassword} placeholder='Crie uma senha'/>
 							
-							<View style={globalStyles.inputIcon}>
+							{/* <View style={globalStyles.inputIcon}>
 								<Ionicons name="person" size={20} color="gray" />
 								<Text>CPF</Text>
 							</View>
-							<Input value={cpf} onChangeText={setCpf} placeholder='Insira seu CPF' keyboardType='numeric'/>
+							<Input value={cpf} onChangeText={setCpf} placeholder='Insira seu CPF' keyboardType='numeric'/> */}
 							
 							<View style={globalStyles.inputIcon}>
 								<Ionicons name="location" size={20} color="gray" />
 								<Text>CEP</Text>
 							</View>
 							<Input value={cep} onChangeText={setCep} placeholder='Insira seu CEP' keyboardType='numeric'/>
-							<Button label='Cadastrar' />
+							<Button label='Cadastrar' onPress={handleSignUp} />
 
 						</View>
 					</View>
