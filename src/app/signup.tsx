@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import AuthService from "@/services/auth.service";
 import { router } from "expo-router";
+import Toast from "react-native-toast-message";
 
 export default function Signup(){
 	const [email, setEmail] = useState('');
@@ -23,7 +24,17 @@ export default function Signup(){
 			.then(async (response) => {
 				const {data} = await response.json();
 				if(response.ok){
+					Toast.show({
+						type: 'success',
+						text1: 'Cadastro realizado com sucesso',
+					});
 					router.replace("/login");
+				}else{
+					Toast.show({
+						type: 'error',
+						text1: 'Erro ao cadastrar',
+						text2: 'Por favor, tente novamente',
+					});
 				}
 			})
 		;
