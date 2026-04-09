@@ -1,4 +1,4 @@
-import { EditProfileForm } from "@/components/edit-profil-form";
+import { EditProfileForm } from "@/components/edit-profile-form";
 import { globalStyles } from "@/stylesheets/global-stylesheet";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";

@@ -3,9 +3,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { View, Text, StyleSheet } from "react-native";
 import { PasswordInput } from "./password-input";
-import { Input } from "./input";
 import { Button } from "./button";
 import { useState } from "react";
+import { EmailInput } from "./email-input";
 
 type LoginFormProps = {
   onSubmit: (email: string, password: string) => void;
@@ -23,7 +23,7 @@ export function LoginForm({ onSubmit }: LoginFormProps){
 					<Ionicons name="mail" size={20} color="gray" />
 					<Text>Email</Text>
 				</View>
-				<Input value={email} onChangeText={setEmail} placeholder='Insira seu email' keyboardType='email-address'/>
+				<EmailInput value={email} onChangeText={setEmail} placeholder='Insira seu email' keyboardType='email-address'/>
 
 				<View style={globalStyles.inputIcon}>
 					<Ionicons name="lock-closed" size={20} color="gray" />

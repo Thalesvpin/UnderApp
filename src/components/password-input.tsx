@@ -1,44 +1,66 @@
+import { globalStyles } from "@/stylesheets/global-stylesheet";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { TextInput, TouchableOpacity, View } from "react-native";
+import { Text, TextInputProps, TouchableOpacity, View } from "react-native";
+import { Input } from "./input";
+import { PASSWORD_REGEX } from "@/utils/regex";
 
-export function PasswordInput({ secureTextEntry = true, ...rest }){
+type PasswordInputProps = TextInputProps & {
+  regex?: boolean;
+};
+
+export function PasswordInput({ value, onBlur, secureTextEntry = true, regex = false, ...rest }: PasswordInputProps){
 	const [hidePassword, setHidePassword] = useState(secureTextEntry);
+	const [error, setError] = useState("");
+
+	const validatePassword: TextInputProps["onBlur"] = (e) => {
+		const password = String(value ?? "");
+		if (PASSWORD_REGEX.test(password)) {
+			setError("");
+		}
+		else {
+			setError(
+				"Senha deve conter:\n  *uma letra maiúscula\n  *uma letra minúscula\n  *um número",
+			);
+		}
+		onBlur?.(e);
+	}
 
 	return (
-		<View style={styles.wrapper}>
-			<TextInput secureTextEntry={hidePassword} {...rest} />
-			{secureTextEntry && (
-				<TouchableOpacity 
-					style={styles.icon}
-					onPress={() => setHidePassword(!hidePassword)}
-				>
-					<Ionicons
-						name={hidePassword ? "eye-off" : "eye"}
-						size={20}
-						color="gray"
-					/>
-				</TouchableOpacity>
-			)}
+		<View>
+			<View>
+				<Input
+					secureTextEntry={hidePassword}
+					value={value}
+					onBlur={validatePassword}
+					{...rest}
+				/>
+				{secureTextEntry && (
+					<TouchableOpacity
+						style={styles.icon}
+						onPress={() => setHidePassword(!hidePassword)}
+					>
+						<Ionicons
+							name={hidePassword ? "eye-off" : "eye"}
+							size={20}
+							color="gray"
+						/>
+					</TouchableOpacity>
+				)}
+			</View>
+			{error && regex ? (
+				<Text style={globalStyles.errorText}>{error}</Text>
+			) : null}
 		</View>
 
 	)
 }
 
 const styles = {
-	wrapper: {
-		borderWidth: 1,
-		// borderColor: '#ff000053',
-		borderColor: '#0011ff53',
-		borderRadius: 10,
-		paddingLeft: 10,
-		marginBottom: 15,
-		
-	},
 	icon: {
 		position: "absolute" as const,
 		right: 10,
 		top: "50%" as const,
-		transform: [{ translateY: -10 }],
+		transform: [{ translateY: -18 }],
 	},
 }
