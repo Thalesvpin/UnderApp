@@ -8,16 +8,17 @@ import { View, KeyboardAvoidingView, ScrollView, StyleSheet, Platform, Pressable
 
 
 export default function EditProfile() {
-	const [userInfo, setUserInfo] = useState({name: '', email: '', cpf: '', cep: ''});
+	const [userInfo, setUserInfo] = useState({name: '', lastName: '', email: '', cpf: '', cep: ''});
 	
 	async function getUserInfo() {
 		console.log("Getting user info...");
 
 		let username = await AsyncStorage.getItem('username');
+		let lastName = await AsyncStorage.getItem('lastName') ?? '';
 		let email = await AsyncStorage.getItem('email');
-		setUserInfo({name: 'Thales', email: 'thales@email.com', cpf: '137729996111', cep: ''});
+		setUserInfo({name: 'Thales', lastName: 'Pinheiro', email: 'thales@email.com', cpf: '137729996111', cep: ''});
 		if(username && email){
-			setUserInfo({name: username, email: email, cpf: '137729996111', cep: ''});
+			setUserInfo({name: username, lastName: lastName, email: email, cpf: '137729996111', cep: ''});
 		}
 	}
 

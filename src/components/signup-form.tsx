@@ -1,6 +1,5 @@
 import { View, Text } from "react-native";
 import { Button } from "./button";
-import { Input } from "./input";
 import { Ionicons } from "@expo/vector-icons";
 import { globalStyles } from "@/stylesheets/global-stylesheet";
 import { PasswordInput } from "./password-input";
@@ -8,12 +7,11 @@ import { useState } from "react";
 import { EmailInput } from "./email-input";
 import { CepInput } from "./cep-input";
 import { NameInput } from "./name-input";
+import { EMAIL_REGEX, CEP_REGEX, CEP_REGEX2, NAME_REGEX, PASSWORD_REGEX } from "@/utils/regex";
 
 type SignupFormProps = {
   onSubmit: (email: string, password: string, firstName: string, lastName: string, cep: string) => void;
 }
-
-const NAME_REGEX = /^[a-zA-Z]+$/;
 
 export function SignupForm({ onSubmit }: SignupFormProps){
 	const [email, setEmail] = useState('');
@@ -22,19 +20,16 @@ export function SignupForm({ onSubmit }: SignupFormProps){
 	const [lastName, setLastName] = useState('');
 	const [cep, setCep] = useState('');
 	// const [cpf, setCpf] = useState('');
-
-	// prevent non-alphabetic characters
-	const handleValidateName = (name: string) => {
-		if(NAME_REGEX.test(name) || name === ''){
-			setFirstName(name);
-		}
-	}
-	const handleValidateLastName = (name: string) => {
-		if(NAME_REGEX.test(name) || name === ''){
-			setLastName(name);
-		}
-	}
 	
+	const isFormValid = (() => {
+		const emailValid = EMAIL_REGEX.test(email) && email !== '';
+		const passwordValid = PASSWORD_REGEX.test(password) && password !== '';
+		const firstNameValid = NAME_REGEX.test(firstName) && firstName !== '';
+		const lastNameValid = NAME_REGEX.test(lastName) && lastName !== '';
+		const cepValid = (CEP_REGEX.test(cep) || CEP_REGEX2.test(cep)) && cep !== '';
+		return emailValid && passwordValid && firstNameValid && lastNameValid && cepValid;
+	});
+
 	return(
 		<View style={globalStyles.cardBg}>
 			<View style={globalStyles.loginFields}>
@@ -43,20 +38,19 @@ export function SignupForm({ onSubmit }: SignupFormProps){
 					<Ionicons name="person" size={20} color="gray" />
 					<Text>Nome</Text>
 				</View>
-				<NameInput value={firstName} onChangeText={handleValidateName} placeholder='Insira seu nome'/>
+				<NameInput value={firstName} onChangeText={setFirstName} placeholder='Insira seu nome'/>
 				
 				<View style={globalStyles.inputIcon}>
 					<Ionicons name="person" size={20} color="gray" />
 					<Text>Sobrenome</Text>
 				</View>
-				<NameInput value={lastName} onChangeText={handleValidateLastName} placeholder='Insira seu sobrenome'/>
+				<NameInput value={lastName} onChangeText={setLastName} placeholder='Insira seu sobrenome'/>
 				
 				<View style={globalStyles.inputIcon}>
 					<Ionicons name="mail" size={20} color="gray" />
 					<Text>Email</Text>
 				</View>
 				<EmailInput value={email} onChangeText={setEmail} placeholder='Insira seu email' keyboardType='email-address' regex={true} />
-				{/* <Input value={email} onChangeText={setEmail} placeholder='Insira seu email' keyboardType='email-address'/> */}
 				
 				<View style={globalStyles.inputIcon}>
 					<Ionicons name="lock-closed" size={20} color="gray" />
@@ -75,7 +69,7 @@ export function SignupForm({ onSubmit }: SignupFormProps){
 					<Text>CEP</Text>
 				</View>
 				<CepInput value={cep} onChangeText={setCep} placeholder='Insira seu CEP' keyboardType='numeric' regex={true} />
-				<Button label='Cadastrar' onPress={() => onSubmit(email, password, firstName, lastName, cep)} />
+				<Button label='Cadastrar' disabled={!isFormValid()} onPress={() => isFormValid() && onSubmit(email, password, firstName, lastName, cep)} />
 
 			</View>
 		</View>

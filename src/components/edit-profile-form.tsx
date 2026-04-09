@@ -7,6 +7,7 @@ import { useState } from "react";
 import { EmailInput } from "./email-input";
 import { CepInput } from "./cep-input";
 import { NameInput } from "./name-input";
+import { EMAIL_REGEX, CEP_REGEX, CEP_REGEX2, NAME_REGEX, PASSWORD_REGEX } from "@/utils/regex";
 
 type EditProfileFormProps = {
 	userInfo: {
@@ -21,6 +22,14 @@ type EditProfileFormProps = {
 export function EditProfileForm({ userInfo, onSubmit }: EditProfileFormProps){
 	const [newUserInfo, setNewUserInfo] = useState({name: '', lastName: '', email: '', cpf: '', cep: ''});
 	
+	const isFormValid = (() => {
+		const emailValid = EMAIL_REGEX.test(newUserInfo.email) && newUserInfo.email !== '';
+		const nameValid = NAME_REGEX.test(newUserInfo.name) && newUserInfo.name !== '';
+		const lastNameValid = NAME_REGEX.test(newUserInfo.lastName) && newUserInfo.lastName !== '';
+		const cepValid = (CEP_REGEX.test(newUserInfo.cep) || CEP_REGEX2.test(newUserInfo.cep)) && newUserInfo.cep !== '';
+		return emailValid && nameValid && lastNameValid && cepValid;
+	});
+
 	return(
 		<View style={globalStyles.cardBg}>
 			<View style={styles.formGroup}>
