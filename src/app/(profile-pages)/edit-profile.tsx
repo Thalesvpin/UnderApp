@@ -1,11 +1,10 @@
-import { Button } from "@/components/button";
-import { Input } from "@/components/input";
+import { EditProfileForm } from "@/components/edit-profil-form";
 import { globalStyles } from "@/stylesheets/global-stylesheet";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { View, Text, KeyboardAvoidingView, ScrollView, StyleSheet, Platform, Pressable, Image } from "react-native";
+import { View, KeyboardAvoidingView, ScrollView, StyleSheet, Platform, Pressable, Image } from "react-native";
 
 
 export default function EditProfile() {
@@ -22,10 +21,10 @@ export default function EditProfile() {
 		}
 	}
 
-	async function saveUserInfo() {
+	async function saveUserInfo(newUserInfo: {name: string, email: string, cpf: string, cep: string}) {
 		console.log("Saving user info...");
-		await AsyncStorage.setItem('username', userInfo.name);
-		await AsyncStorage.setItem('email', userInfo.email);
+		await AsyncStorage.setItem('username', newUserInfo.name);
+		await AsyncStorage.setItem('email', newUserInfo.email);
 	}
 
 	useEffect(() => {
@@ -55,32 +54,8 @@ export default function EditProfile() {
 							<Ionicons name="create-outline" size={22} color="#000000" />
 						</Pressable>
 					</View>
-					<View style={globalStyles.cardBg}>
-						<View style={styles.formGroup}>
-						
-							<View style={globalStyles.inputIcon}>
-								<Ionicons name="person" size={22} color="gray" />
-								<Text>Nome</Text>
-							</View>
-							<Input value={userInfo.name} onChangeText={(text) => setUserInfo({...userInfo, name: text})} placeholder="Nome" />
-							<View style={globalStyles.inputIcon}>
-								<Ionicons name="mail" size={22} color="gray" />
-								<Text>Email</Text>
-							</View>
-							<Input value={userInfo.email} onChangeText={(text) => setUserInfo({...userInfo, email: text})} placeholder="Email" keyboardType='email-address'/>
-							<View style={globalStyles.inputIcon}>
-								<Ionicons name="person" size={20} color="gray" />
-								<Text>CPF</Text>
-							</View>
-							<Input value={userInfo.cpf} style={{color: 'gray'}} editable={false} placeholder='CPF do usuário' keyboardType='numeric'/>
-							<View style={globalStyles.inputIcon}>
-								<Ionicons name="location" size={20} color="gray" />
-								<Text>CEP</Text>
-							</View>
-							<Input value={userInfo.cep} onChangeText={(text) => setUserInfo({...userInfo, cep: text})} placeholder='CEP do usuário' keyboardType='numeric'/>
-							<Button label="Salvar" />
-						</View>
-					</View>
+					
+					<EditProfileForm userInfo={userInfo} onSubmit={saveUserInfo} />
 				</View>
 			</ScrollView>
 		</KeyboardAvoidingView>
@@ -92,9 +67,6 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
-	},
-	formGroup: {
-		width: '93%',
 	},
 	avatarWrap: {
 		marginTop: 15,
