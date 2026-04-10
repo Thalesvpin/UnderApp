@@ -1,11 +1,11 @@
 import { TextInputProps } from "react-native";
 import { Input } from "./input";
-import { NAME_REGEX } from "@/utils/regex";
+import { EVERYTHING_BUT_LETTERS_REGEX } from "@/utils/regex";
 
 export function NameInput({ value, onChangeText: onChangeTextFromParent, ...rest }: TextInputProps) {
 	
 	const handleChangeText = (text: string) => {
-		const onlyLetters = text.replace(NAME_REGEX, "");
+		const onlyLetters = text.replace(EVERYTHING_BUT_LETTERS_REGEX, "");
 		onChangeTextFromParent?.(onlyLetters);
 	};
 

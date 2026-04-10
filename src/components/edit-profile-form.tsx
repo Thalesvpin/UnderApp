@@ -3,7 +3,6 @@ import { CEP_REGEX, CEP_REGEX2, EMAIL_REGEX, NAME_REGEX } from "@/utils/regex";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Button } from "./button";
 import { CepInput } from "./inputs/cep-input";
 import { EmailInput } from "./inputs/email-input";
 import { NameInput } from "./inputs/name-input";
@@ -11,16 +10,16 @@ import { LoaderButton } from "./loader-button";
 
 type EditProfileFormProps = {
 	userInfo: {
-		name: string;
+		firstName: string;
 		lastName: string;
 		email: string;
 		// cpf: string;
 		cep: string;
 	},
-	onSubmit: (newUserInfo: {name: string, email: string, cpf: string, cep: string}) => void;
+	onSubmit: (newUserInfo: {firstName: string, email: string, cpf: string, cep: string}) => void;
 }
 export function EditProfileForm({ userInfo, onSubmit }: EditProfileFormProps){
-	const [newUserInfo, setNewUserInfo] = useState({name: '', lastName: '', email: '', cpf: '', cep: ''});
+	const [newUserInfo, setNewUserInfo] = useState({firstName: '', lastName: '', email: '', cpf: '', cep: ''});
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSubmit = async () => {
@@ -31,7 +30,7 @@ export function EditProfileForm({ userInfo, onSubmit }: EditProfileFormProps){
 	
 	const isFormValid = (() => {
 		const emailValid = EMAIL_REGEX.test(newUserInfo.email) && newUserInfo.email !== '';
-		const nameValid = NAME_REGEX.test(newUserInfo.name) && newUserInfo.name !== '';
+		const nameValid = NAME_REGEX.test(newUserInfo.firstName) && newUserInfo.firstName !== '';
 		const lastNameValid = NAME_REGEX.test(newUserInfo.lastName) && newUserInfo.lastName !== '';
 		const cepValid = (CEP_REGEX.test(newUserInfo.cep) || CEP_REGEX2.test(newUserInfo.cep)) && newUserInfo.cep !== '';
 		return emailValid && nameValid && lastNameValid && cepValid;
@@ -45,7 +44,7 @@ export function EditProfileForm({ userInfo, onSubmit }: EditProfileFormProps){
 					<Ionicons name="person" size={22} color="gray" />
 					<Text>Nome</Text>
 				</View>
-				<NameInput value={newUserInfo.name} onChangeText={(text) => setNewUserInfo({...newUserInfo, name: text})} placeholder="Nome" />
+				<NameInput value={newUserInfo.firstName} onChangeText={(text) => setNewUserInfo({...newUserInfo, firstName: text})} placeholder="Nome" />
 
 				<View style={globalStyles.inputIcon}>
 					<Ionicons name="person" size={22} color="gray" />

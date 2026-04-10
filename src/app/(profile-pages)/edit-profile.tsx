@@ -8,7 +8,7 @@ import { View, KeyboardAvoidingView, ScrollView, StyleSheet, Platform, Pressable
 
 
 export default function EditProfile() {
-	const [userInfo, setUserInfo] = useState({name: '', lastName: '', email: '', cpf: '', cep: ''});
+	const [userInfo, setUserInfo] = useState({firstName: '', lastName: '', email: '', cpf: '', cep: ''});
 	
 	async function getUserInfo() {
 		console.log("Getting user info...");
@@ -16,15 +16,15 @@ export default function EditProfile() {
 		let username = await AsyncStorage.getItem('username');
 		let lastName = await AsyncStorage.getItem('lastName') ?? '';
 		let email = await AsyncStorage.getItem('email');
-		setUserInfo({name: 'Thales', lastName: 'Pinheiro', email: 'thales@email.com', cpf: '137729996111', cep: ''});
+		setUserInfo({firstName: 'Thales', lastName: 'Pinheiro', email: 'thales@email.com', cpf: '137729996111', cep: ''});
 		if(username && email){
-			setUserInfo({name: username, lastName: lastName, email: email, cpf: '137729996111', cep: ''});
+			setUserInfo({firstName: username, lastName: lastName, email: email, cpf: '137729996111', cep: ''});
 		}
 	}
 
-	async function saveUserInfo(newUserInfo: {name: string, email: string, cpf: string, cep: string}) {
+	async function saveUserInfo(newUserInfo: {firstName: string, email: string, cpf: string, cep: string}) {
 		console.log("Saving user info...");
-		await AsyncStorage.setItem('username', newUserInfo.name);
+		await AsyncStorage.setItem('username', newUserInfo.firstName);
 		await AsyncStorage.setItem('email', newUserInfo.email);
 	}
 
