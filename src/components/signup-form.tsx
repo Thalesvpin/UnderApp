@@ -85,6 +85,7 @@ export function SignupForm({ onSubmit }: SignupFormProps){
 						loadingText="Carregando..."
 						isLoading={isLoading}
 						onPress={handleSubmit}
+						disabled={!isFormValid()}
 					></LoaderButton>
 				</View>
 

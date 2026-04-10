@@ -7,6 +7,7 @@ import { LoaderButton } from "./loader-button";
 // import { Button } from "./button";
 import { EmailInput } from "./inputs/email-input";
 import { PasswordInput } from "./inputs/password-input";
+import { EMAIL_REGEX, PASSWORD_REGEX } from "@/utils/regex";
 
 type LoginFormProps = {
   onSubmit: (email: string, password: string) => void;
@@ -22,6 +23,12 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
 		await onSubmit(email, password);
 		setIsLoading(false);
 	}
+
+	const isFormValid = (() => {
+		const emailValid = email !== '';
+		const passwordValid = password !== '';
+		return emailValid && passwordValid;
+	})();
 
   return (
     <View style={globalStyles.cardBg}>
@@ -54,6 +61,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
 						loadingText="Carregando..."
 						isLoading={isLoading}
 						onPress={handleSubmit}
+						disabled={!isFormValid}
 					></LoaderButton>
 				</View>
 

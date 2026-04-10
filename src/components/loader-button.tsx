@@ -7,14 +7,16 @@ type LoaderButtonProps = {
 	isLoading: boolean;
 	onPress: () => void;
 	label: string;
+	disabled: boolean;
 }
 
-export function LoaderButton({ loadingText, isLoading, onPress, label }: LoaderButtonProps) {
+export function LoaderButton({ disabled, loadingText, isLoading, onPress, label }: LoaderButtonProps) {
 	return (
 		<Button
 			style={styles.border}
 			loadingText={loadingText}
 			isLoading={isLoading}
+			disabled={disabled}
 			onPress={onPress}
 			loadingTextColor="#000"
 			showLoadingIndicator

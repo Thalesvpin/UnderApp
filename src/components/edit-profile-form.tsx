@@ -79,6 +79,7 @@ export function EditProfileForm({ userInfo, onSubmit }: EditProfileFormProps){
 						loadingText="Salvando..."
 						isLoading={isLoading}
 						onPress={handleSubmit}
+						disabled={!isFormValid()}
 					></LoaderButton>
 				</View>
 			</View>
