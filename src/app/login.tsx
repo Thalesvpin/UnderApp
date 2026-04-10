@@ -21,22 +21,26 @@ export default function Login() {
 		}
 	}
 
-	function handleSignIn(email: string, password: string){
-		console.log('Signing in...')
-
-		AuthService.login({ email, password }).then(async (response) => {
-			const {data} = await response.json();
-			if(response.ok && data.token){
+	async function handleSignIn(email: string, password: string) {
+		try {
+			const response = await AuthService.login({ email, password });
+			const { data } = await response.json();
+			if (response.ok && data.token) {
 				authContext.logIn(data.token);
-			}
-			else{
+			} else {
 				Toast.show({
 					type: 'error',
 					text1: 'Erro ao fazer login',
 					text2: 'Por favor, tente novamente',
 				});
 			}
-		});
+		} catch {
+			Toast.show({
+				type: 'error',
+				text1: 'Erro ao fazer login',
+				text2: 'Por favor, tente novamente',
+			});
+		}
 	}
 
 	return(

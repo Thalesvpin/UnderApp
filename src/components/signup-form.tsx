@@ -1,13 +1,14 @@
-import { View, Text } from "react-native";
-import { Button } from "./button";
-import { Ionicons } from "@expo/vector-icons";
 import { globalStyles } from "@/stylesheets/global-stylesheet";
-import { PasswordInput } from "./password-input";
+import { CEP_REGEX, CEP_REGEX2, EMAIL_REGEX, NAME_REGEX, PASSWORD_REGEX } from "@/utils/regex";
+import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { EmailInput } from "./email-input";
-import { CepInput } from "./cep-input";
-import { NameInput } from "./name-input";
-import { EMAIL_REGEX, CEP_REGEX, CEP_REGEX2, NAME_REGEX, PASSWORD_REGEX } from "@/utils/regex";
+import { Text, View } from "react-native";
+import { Button } from "./button";
+import { CepInput } from "./inputs/cep-input";
+import { EmailInput } from "./inputs/email-input";
+import { NameInput } from "./inputs/name-input";
+import { PasswordInput } from "./inputs/password-input";
+import { LoaderButton } from "./loader-button";
 
 type SignupFormProps = {
   onSubmit: (email: string, password: string, firstName: string, lastName: string, cep: string) => void;
@@ -20,6 +21,13 @@ export function SignupForm({ onSubmit }: SignupFormProps){
 	const [lastName, setLastName] = useState('');
 	const [cep, setCep] = useState('');
 	// const [cpf, setCpf] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
+	
+	const handleSubmit = async () => {
+		setIsLoading(true);
+		await onSubmit(email, password, firstName, lastName, cep);
+		setIsLoading(false);
+	}
 	
 	const isFormValid = (() => {
 		const emailValid = EMAIL_REGEX.test(email) && email !== '';
@@ -69,7 +77,16 @@ export function SignupForm({ onSubmit }: SignupFormProps){
 					<Text>CEP</Text>
 				</View>
 				<CepInput value={cep} onChangeText={setCep} placeholder='Insira seu CEP' keyboardType='numeric' regex={true} />
-				<Button label='Cadastrar' disabled={!isFormValid()} onPress={() => isFormValid() && onSubmit(email, password, firstName, lastName, cep)} />
+				{/* <Button label='Cadastrar' disabled={!isFormValid()} onPress={() => isFormValid() && onSubmit(email, password, firstName, lastName, cep)} /> */}
+
+				<View style={globalStyles.hCenter}>
+					<LoaderButton
+						label="Cadastrar"
+						loadingText="Carregando..."
+						isLoading={isLoading}
+						onPress={handleSubmit}
+					></LoaderButton>
+				</View>
 
 			</View>
 		</View>

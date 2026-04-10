@@ -1,13 +1,13 @@
 import { globalStyles } from "@/stylesheets/global-stylesheet";
+import { CEP_REGEX, CEP_REGEX2, EMAIL_REGEX, NAME_REGEX } from "@/utils/regex";
 import { Ionicons } from "@expo/vector-icons";
-import { View, Text, StyleSheet } from "react-native";
-import { Input } from "./input";
-import { Button } from "./button";
 import { useState } from "react";
-import { EmailInput } from "./email-input";
-import { CepInput } from "./cep-input";
-import { NameInput } from "./name-input";
-import { EMAIL_REGEX, CEP_REGEX, CEP_REGEX2, NAME_REGEX, PASSWORD_REGEX } from "@/utils/regex";
+import { StyleSheet, Text, View } from "react-native";
+import { Button } from "./button";
+import { CepInput } from "./inputs/cep-input";
+import { EmailInput } from "./inputs/email-input";
+import { NameInput } from "./inputs/name-input";
+import { LoaderButton } from "./loader-button";
 
 type EditProfileFormProps = {
 	userInfo: {
@@ -21,6 +21,13 @@ type EditProfileFormProps = {
 }
 export function EditProfileForm({ userInfo, onSubmit }: EditProfileFormProps){
 	const [newUserInfo, setNewUserInfo] = useState({name: '', lastName: '', email: '', cpf: '', cep: ''});
+	const [isLoading, setIsLoading] = useState(false);
+
+	const handleSubmit = async () => {
+		setIsLoading(true);
+		await onSubmit(newUserInfo);
+		setIsLoading(false);
+	}
 	
 	const isFormValid = (() => {
 		const emailValid = EMAIL_REGEX.test(newUserInfo.email) && newUserInfo.email !== '';
@@ -64,7 +71,16 @@ export function EditProfileForm({ userInfo, onSubmit }: EditProfileFormProps){
 				</View>
 				<CepInput value={newUserInfo.cep} onChangeText={(text) => setNewUserInfo({...newUserInfo, cep: text})} placeholder='CEP do usuário' keyboardType='numeric' regex={true} />
 				
-				<Button label="Salvar" />
+				{/* <Button label="Salvar" /> */}
+
+				<View style={globalStyles.hCenter}>
+					<LoaderButton
+						label="Salvar"
+						loadingText="Salvando..."
+						isLoading={isLoading}
+						onPress={handleSubmit}
+					></LoaderButton>
+				</View>
 			</View>
 		</View>
 	)

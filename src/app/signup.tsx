@@ -9,10 +9,31 @@ export default function Signup(){
 	
 	
 
-	function handleSignUp(email: string, password: string, firstName: string, lastName: string, cep: string){
-		console.log('Signing up...')
-		AuthService.signup({ email, password, firstName, lastName, cep })
-			.then(async (response) => {
+	// function handleSignUp(email: string, password: string, firstName: string, lastName: string, cep: string){
+	// 	console.log('Signing up...')
+	// 	AuthService.signup({ email, password, firstName, lastName, cep })
+	// 		.then(async (response) => {
+	// 			const {data} = await response.json();
+	// 			if(response.ok){
+	// 				Toast.show({
+	// 					type: 'success',
+	// 					text1: 'Cadastro realizado com sucesso',
+	// 				});
+	// 				router.replace("/login");
+	// 			}else{
+	// 				Toast.show({
+	// 					type: 'error',
+	// 					text1: 'Erro ao cadastrar',
+	// 					text2: 'Por favor, tente novamente',
+	// 				});
+	// 			}
+	// 		})
+	// 	;
+	// }
+
+	async function handleSignUp(email: string, password: string, firstName: string, lastName: string, cep: string){
+		try {
+			const response = await AuthService.signup({ email, password, firstName, lastName, cep });
 				const {data} = await response.json();
 				if(response.ok){
 					Toast.show({
@@ -26,9 +47,14 @@ export default function Signup(){
 						text1: 'Erro ao cadastrar',
 						text2: 'Por favor, tente novamente',
 					});
-				}
-			})
-		;
+			}
+			} catch {
+			Toast.show({
+				type: 'error',
+				text1: 'Erro ao cadastrar',
+				text2: 'Por favor, tente novamente',
+			});
+		}
 	}
 	
 	return(
