@@ -11,6 +11,7 @@ import { AuthContext } from '@/utils/authContext'
 import AuthService from '@/services/auth.service'
 import { Ionicons } from '@expo/vector-icons'
 import * as SecureStore from 'expo-secure-store'
+import Toast from 'react-native-toast-message'
 
 
 export default function Login() {
@@ -57,7 +58,11 @@ export default function Login() {
 				authContext.logIn(data.token);
 			}
 			else{
-				throw new Error('Failed to login');
+				Toast.show({
+					type: 'error',
+					text1: 'Erro ao fazer login',
+					text2: 'Por favor, tente novamente',
+				});
 			}
 		});
 	}
@@ -85,9 +90,7 @@ export default function Login() {
 							</View>
 							<PasswordInput value={password} onChangeText={setPassword} placeholder='Insira sua senha'/>
 
-							<Link href={"/(tabs)"} replace asChild>
-								<Button label='Entrar' onPress={handleSignIn}/>
-							</Link>
+							<Button label='Entrar' onPress={handleSignIn}/>
 
 							<View style={[globalStyles.hCenter, styles.createAccountText]}>
 								<Text>Não tem uma conta?</Text>
