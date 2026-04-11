@@ -6,4 +6,4 @@ export const EVERYTHING_BUT_LETTERS_REGEX = /[^a-zA-ZÀ-ÿ\s]/g;
 export const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).*$/;
 
 export const CEP_REGEX = /^[0-9]{8}$/;
-export const CEP_REGEX2 = /^[0-9]{5}-[0-9]{3}$/;
+export const EVERYTHING_BUT_NUMBERS_REGEX = /[^0-9]/g;

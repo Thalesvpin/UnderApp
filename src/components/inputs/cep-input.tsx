@@ -2,18 +2,23 @@ import { View, Text, TextInputProps } from "react-native";
 import { Input } from "./input";
 import { useState } from "react";
 import { globalStyles } from "@/stylesheets/global-stylesheet";
-import { CEP_REGEX, CEP_REGEX2 } from "@/utils/regex";
+import { CEP_REGEX, EVERYTHING_BUT_NUMBERS_REGEX } from "@/utils/regex";
 
 type CepInputProps = TextInputProps & {
   regex?: boolean;
 };
 
-export function CepInput({ value, onBlur, regex = false, ...rest }: CepInputProps) {
+export function CepInput({ value, onBlur, regex = false, onChangeText: onChangeTextFromParent, ...rest }: CepInputProps) {
 	const [error, setError] = useState("");
 
+	const handleChangeText = (text: string) => {
+		const onlyNumbers = text.replace(EVERYTHING_BUT_NUMBERS_REGEX, "");
+		onChangeTextFromParent?.(onlyNumbers);
+	};
+	
 	const validateCep: TextInputProps["onBlur"] = (e) => {
 		const cep = String(value ?? "");
-		if (CEP_REGEX.test(cep) || CEP_REGEX2.test(cep) || cep === '') {
+		if (CEP_REGEX.test(cep) || cep === '') {
 			setError("");
 		} else {
 			setError("CEP inválido");
@@ -28,6 +33,7 @@ export function CepInput({ value, onBlur, regex = false, ...rest }: CepInputProp
 				keyboardType="numeric"
 				value={value}
 				onBlur={validateCep}
+				onChangeText={handleChangeText}
 			/>
 			{error && regex ? (
 				<Text style={globalStyles.errorText}>{error}</Text>

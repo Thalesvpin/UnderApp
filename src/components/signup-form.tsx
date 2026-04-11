@@ -34,7 +34,7 @@ export function SignupForm({ onSubmit }: SignupFormProps){
 		const passwordValid = PASSWORD_REGEX.test(password) && password !== '';
 		const firstNameValid = NAME_REGEX.test(firstName) && firstName !== '';
 		const lastNameValid = NAME_REGEX.test(lastName) && lastName !== '';
-		const cepValid = (CEP_REGEX.test(cep) || CEP_REGEX2.test(cep)) && cep !== '';
+		const cepValid = CEP_REGEX.test(cep) && cep !== '';
 		return emailValid && passwordValid && firstNameValid && lastNameValid && cepValid;
 	});
 
