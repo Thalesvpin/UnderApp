@@ -15,37 +15,20 @@ import {
 } from "react-native";
 
 export default function EditProfile() {
-  const [userInfo, setUserInfo] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    cpf: "",
-    cep: "",
-  });
+	const [userInfo, setUserInfo] = useState({name: '', email: '', cpf: '', cep: '', profileImageUrl: ''});
+	
+	async function getUserInfo() {
+		console.log("Getting user info...");
 
-  async function getUserInfo() {
-    console.log("Getting user info...");
-
-    let username = await AsyncStorage.getItem("username");
-    let lastName = (await AsyncStorage.getItem("lastName")) ?? "";
-    let email = await AsyncStorage.getItem("email");
-    setUserInfo({
-      firstName: "Thales",
-      lastName: "Pinheiro",
-      email: "thales@email.com",
-      cpf: "137729996111",
-      cep: "",
-    });
-    if (username && email) {
-      setUserInfo({
-        firstName: username,
-        lastName: lastName,
-        email: email,
-        cpf: "137729996111",
-        cep: "",
-      });
-    }
-  }
+		UserService.getUserInfo().then(async (response) => {
+			if (response.ok) {
+				const {data} = await response.json();
+				setUserInfo(data);
+			}
+		}).catch((error) => {
+			console.error(error);
+		});
+	}
 
   async function saveUserInfo(newUserInfo: {
     firstName: string;
