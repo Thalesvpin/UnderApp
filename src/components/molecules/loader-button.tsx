@@ -1,6 +1,6 @@
 import { View, StyleSheet, Text } from "react-native";
-import { Button } from "./reactix/button/button";
-import { CircularLoader } from "./reactix/circular-loader/circular-loader";
+import { Button } from "../atoms/reactix/button/button";
+import { CircularLoader } from "../atoms/reactix/circular-loader/circular-loader";
 
 type LoaderButtonProps = {
 	loadingText: string;

@@ -1,4 +1,4 @@
-import { CurvedBottomTabs } from "@/components/reactix/curved-bottom-tabs/curved-bottom-tabs";
+import { CurvedBottomTabs } from "@/components/organisms/curved-bottom-tabs/curved-bottom-tabs";
 import { AuthContext } from "@/utils/authContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
