@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import UserService from "@/services/user.service";
 import { UpdateUserInfo, UserInfo } from "@/utils/types";
+import Toast from "react-native-toast-message";
 
 const emptyUserInfo: UserInfo = {
 	firstName: '',
@@ -37,15 +38,22 @@ export default function EditProfile() {
       if (response.ok) {
         const {data} = await response.json();
         setUserInfo(data);
+				Toast.show({
+          type: "success",
+          text1: "Perfil atualizado com sucesso",
+        });
+      } else {
+        Toast.show({
+					type: "error",
+					text1: "Erro ao atualizar perfil",
+					text2: "Por favor, tente novamente mais tarde",
+				});
       }
-    }).catch((error) => {
-      console.error(error);
     });
   }
 
   useEffect(() => {
     getUserInfo();
-    console.log("aaa");
   }, []);
 
   return (
