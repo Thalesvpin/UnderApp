@@ -41,10 +41,37 @@ async function deleteUser() {
 	});
 }
 
+async function updateUserProfileImage(image: FormData) {
+	const token = await SecureStore.getItemAsync('token');
+	
+	return fetch(`${BASE_URL}/users/me/profile-image`, {
+		method: 'POST',
+		headers: {
+			// 'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		},
+		body: image,
+	});
+}
+
+async function deleteUserProfileImage() {
+	const token = await SecureStore.getItemAsync('token');
+	
+	return fetch(`${BASE_URL}/users/me/profile-image`, {
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		},
+	});
+}
+
 const UserService = {
 	getUserInfo,
 	updateUserInfo,
 	deleteUser,
+	updateUserProfileImage,
+	deleteUserProfileImage,
 };
 
 export default UserService;
