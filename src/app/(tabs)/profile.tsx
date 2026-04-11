@@ -4,20 +4,33 @@ import { AuthContext } from "@/utils/authContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { ClickableCard } from "@/components/clickable-card";
+import UserService, { UserInfo } from "@/services/user.service";
 
 export default function Profile() {
 	const authContext = useContext(AuthContext);
   const [username, setUsername] = useState('');
+	const [userInfo, setUserInfo] = useState<UserInfo>({});
+	const [profilePicture, setProfilePicture] = useState('');
 
-	async function getUsername() {
-		let username = await AsyncStorage.getItem('username');
-		if(username){
-			setUsername(username);
-		}
+	async function getUserInfo() {
+		UserService.getUserInfo().then(async (response) => {
+			if (response.ok) {
+				const {data} = await response.json();
+				setUserInfo(data);
+				setUsername(data.firstName + ' ' + data.lastName);
+				setProfilePicture(data.profileImageUrl);
+			}
+		}).catch((error) => {
+			console.error(error);
+		});
 	}
+	
+	useEffect(() => {
+		getUserInfo();
+	}, []);
 
   function logOut() {
 		console.log("Loging out...");
@@ -30,7 +43,7 @@ export default function Profile() {
 			<View style={globalStyles.avatarWrap}>
 				<Image
 					style={globalStyles.profilePicture}
-					source={require("@/assets/mordecai.png")}
+					source={profilePicture ? {uri: profilePicture} : require("@/assets/default-avatar.png")}
 				/>
 				<Pressable
 					style={({ pressed }) => [

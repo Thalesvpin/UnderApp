@@ -1,5 +1,6 @@
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
+import UserService from "@/services/user.service";
 import { globalStyles } from "@/stylesheets/global-stylesheet";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -9,17 +10,19 @@ import { View, Text, KeyboardAvoidingView, ScrollView, StyleSheet, Platform, Pre
 
 
 export default function EditProfile() {
-	const [userInfo, setUserInfo] = useState({name: '', email: '', cpf: '', cep: ''});
+	const [userInfo, setUserInfo] = useState({name: '', email: '', cpf: '', cep: '', profileImageUrl: ''});
 	
 	async function getUserInfo() {
 		console.log("Getting user info...");
 
-		let username = await AsyncStorage.getItem('username');
-		let email = await AsyncStorage.getItem('email');
-		setUserInfo({name: 'Thales', email: 'thales@email.com', cpf: '137729996111', cep: ''});
-		if(username && email){
-			setUserInfo({name: username, email: email, cpf: '137729996111', cep: ''});
-		}
+		UserService.getUserInfo().then(async (response) => {
+			if (response.ok) {
+				const {data} = await response.json();
+				setUserInfo(data);
+			}
+		}).catch((error) => {
+			console.error(error);
+		});
 	}
 
 	async function saveUserInfo() {
@@ -41,7 +44,7 @@ export default function EditProfile() {
 					<View style={[globalStyles.avatarWrap, styles.avatarWrap]}>
 						<Image
 							style={globalStyles.profilePicture}
-							source={require("@/assets/mordecai.png")}
+							source={userInfo.profileImageUrl ? {uri: userInfo.profileImageUrl} : require("@/assets/default-avatar.png")}
 						/>
 						<Pressable
 							style={({ pressed }) => [
