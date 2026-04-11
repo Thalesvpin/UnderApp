@@ -1,21 +1,22 @@
 import { EditProfileForm } from "@/components/organisms/edit-profile-form";
 import { globalStyles } from "@/stylesheets/global-stylesheet";
 import { Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-	Image,
-	KeyboardAvoidingView,
-	Platform,
-	Pressable,
-	ScrollView,
-	StyleSheet,
-	View,
-} from "react-native";
+import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import UserService from "@/services/user.service";
+import { UpdateUserInfo, UserInfo } from "@/utils/types";
+
+const emptyUserInfo: UserInfo = {
+	firstName: '',
+	lastName: '',
+	email: '',
+	cep: '',
+	profileImageUrl: '',
+};
 
 export default function EditProfile() {
-	const [userInfo, setUserInfo] = useState({name: '', email: '', cpf: '', cep: '', profileImageUrl: ''});
+	const [userInfo, setUserInfo] = useState<UserInfo>(emptyUserInfo);
 	
 	async function getUserInfo() {
 		console.log("Getting user info...");
@@ -30,15 +31,16 @@ export default function EditProfile() {
 		});
 	}
 
-  async function saveUserInfo(newUserInfo: {
-    firstName: string;
-    email: string;
-    cpf: string;
-    cep: string;
-  }) {
+  async function saveUserInfo(newUserInfo: UpdateUserInfo) {
     console.log("Saving user info...");
-    await AsyncStorage.setItem("username", newUserInfo.firstName);
-    await AsyncStorage.setItem("email", newUserInfo.email);
+    UserService.updateUserInfo(newUserInfo).then(async (response) => {
+      if (response.ok) {
+        const {data} = await response.json();
+        setUserInfo(data);
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
   }
 
   useEffect(() => {

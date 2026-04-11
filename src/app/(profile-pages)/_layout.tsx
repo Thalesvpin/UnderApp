@@ -1,3 +1,4 @@
+import { colorBg } from "@/stylesheets/global-stylesheet";
 import { Stack } from "expo-router";
 
 export default function ProfileLayout() {
@@ -12,7 +13,7 @@ export default function ProfileLayout() {
 				options={{
 					title: "Editar Perfil",
 					headerStyle: {
-						backgroundColor: '#d2e8ff',
+						backgroundColor: colorBg,
 					},
 					headerShadowVisible: false,
 					headerTintColor: '#000',

@@ -1,41 +1,29 @@
 import { globalStyles } from "@/stylesheets/global-stylesheet";
 import { CEP_REGEX, EMAIL_REGEX, NAME_REGEX } from "@/utils/regex";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { CepInput } from "../molecules/inputs/cep-input";
 import { EmailInput } from "../molecules/inputs/email-input";
 import { NameInput } from "../molecules/inputs/name-input";
 import { LoaderButton } from "../molecules/loader-button";
+import { UpdateUserInfo, UserInfo } from "@/utils/types";
 
 type EditProfileFormProps = {
-  userInfo: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    // cpf: string;
-    cep: string;
-  };
-  onSubmit: (newUserInfo: {
-    firstName: string;
-    email: string;
-    cpf: string;
-    cep: string;
-  }) => void;
+  userInfo: UserInfo;
+  onSubmit: (newUserInfo: UpdateUserInfo) => void;
 };
 export function EditProfileForm({ userInfo, onSubmit }: EditProfileFormProps) {
-  const [newUserInfo, setNewUserInfo] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    cpf: "",
-    cep: "",
-  });
+  const [newUserInfo, setNewUserInfo] = useState<UpdateUserInfo>({firstName: '', lastName: '', email: '', cep: ''});
   const [isLoading, setIsLoading] = useState(false);
+
+	useEffect(() => {
+		setNewUserInfo(userInfo);
+	}, [userInfo]);
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    await onSubmit(newUserInfo);
+    await onSubmit(newUserInfo ?? {});
     setIsLoading(false);
   };
 

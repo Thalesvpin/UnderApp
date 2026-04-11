@@ -1,14 +1,8 @@
+import { UpdateUserInfo, UserInfo } from '@/utils/types';
 import * as SecureStore from 'expo-secure-store';
 
 const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
-export type UserInfo = {
-	firstName?: string;
-	lastName?: string;
-	email?: string;
-	cep?: string;
-	// cpf?: string;
-};
 
 async function getUserInfo() {
 	const token = await SecureStore.getItemAsync('token');
@@ -22,7 +16,7 @@ async function getUserInfo() {
 	});
 }
 
-async function updateUserInfo(payload: UserInfo) {
+async function updateUserInfo(payload: UpdateUserInfo) {
 	const token = await SecureStore.getItemAsync('token');
 	
 	return fetch(`${BASE_URL}/users/me`, {
