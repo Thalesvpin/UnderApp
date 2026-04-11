@@ -1,4 +1,4 @@
-import { Button } from "@/components/button";
+import { ProfilePageOptButton } from "@/components/molecules/profile-page-opt-button";
 import { globalStyles } from "@/stylesheets/global-stylesheet";
 import { AuthContext } from "@/utils/authContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -33,8 +33,8 @@ export default function Profile() {
 	}, []);
 
   function logOut() {
-		console.log("Loging out...");
-		authContext.logOut();
+    console.log("Loging out...");
+    authContext.logOut();
   }
 
   return (
@@ -55,83 +55,76 @@ export default function Profile() {
 					accessibilityLabel="Editar foto do perfil"
 				>
 					<Ionicons name="create-outline" size={22} color="#000000" />
-				</Pressable>
-			</View>
-			<Text>{username ? username : 'NAME PLACEHOLDER'}</Text>
+				</Pressable> */}
+        </View>
+        <Text>{username ? username : "NAME PLACEHOLDER"}</Text>
 
-			<View style={styles.profileOptions}>
+        <View style={styles.profileOptions}>
+          <ProfilePageOptButton
+            icon="person-outline"
+            text="Editar Perfil"
+            onPress={() => router.push("/edit-profile")}
+          />
 
-				<ClickableCard style={styles.btnGap}>
-					<Ionicons name="person-outline" size={22} color="#000000" />
-					<Text>Editar Perfil</Text>
-				</ClickableCard>
+          <ProfilePageOptButton
+            icon="document-text-outline"
+            text="Meus Relatos"
+            onPress={() => router.push("/wip")}
+          />
 
-				<Link href="/wip" asChild style={styles.btnGap}>
-					<ClickableCard style={styles.btnGap} onPress={checkToken}>
-						<Ionicons name="document-text-outline" size={22} color="#000000" />
-						<Text>Meus Relatos</Text>
-					</ClickableCard>
-				</Link>
+          <ProfilePageOptButton
+            icon="map-outline"
+            text="Gerenciar Áreas Monitoradas"
+            onPress={() => router.push("/wip")}
+          />
 
-				<Link href="/wip" asChild style={styles.btnGap}>
-					<ClickableCard style={styles.btnGap}>
-						<Ionicons name="map-outline" size={22} color="#000000" />
-						<Text>Gerenciar Áreas Monitoradas</Text>
-					</ClickableCard>
-				</Link>
+          <ProfilePageOptButton
+            icon="settings-outline"
+            text="Configurações do App"
+            onPress={() => router.push("/wip")}
+          />
 
-				<Link href="/wip" asChild style={styles.btnGap}>
-					<ClickableCard style={styles.btnGap}>
-						<Ionicons name="settings-outline" size={22} color="#000000" />
-						<Text>Configurações do App</Text>
-					</ClickableCard>
-				</Link> 
+          <ProfilePageOptButton
+            icon="podium-outline"
+            text="Gerar Relatório"
+            onPress={() => router.push("/wip")}
+          />
 
-				<Link href="/wip" asChild style={styles.btnGap}>
-					<ClickableCard style={styles.btnGap} onPress={donwloadReport}>
-						<Ionicons name="podium-outline" size={22} color="#000000" />
-						<Text>Gerar Relatório</Text>
-					</ClickableCard>
-				</Link>
-
-				<ClickableCard style={styles.btnGap} onPress={logOut}>
-					<Ionicons name="exit-outline" size={22} color="#000000" />
-					<Text>Sair</Text>
-				</ClickableCard>
-
-			</View>
-	  </View>
-	</ScrollView>
+          <ProfilePageOptButton
+            icon="exit-outline"
+            text="Sair"
+            onPress={logOut}
+          />
+        </View>
+      </View>
+    </ScrollView>
   );
 }
 
 async function checkToken() {
   const token = await AsyncStorage.getItem("userToken");
   if (!token) {
-	console.log("Token: null");
-	return;
+    console.log("Token: null");
+    return;
   }
   console.log("Token:", JSON.parse(token));
 }
-
-
 
 function donwloadReport() {
   console.log("Downloading report...");
 }
 
-
 const styles = StyleSheet.create({
   pageWrapper: {
-		paddingTop: "15%",
+    paddingTop: "15%",
   },
   btnGap: {
-		marginTop: 6,
-		marginBottom: 6,
-		height: 60,
+    marginTop: 6,
+    marginBottom: 6,
+    height: 60,
   },
-	profileOptions:{
-		width: '80%',
-		marginTop: 15,
-	}
+  profileOptions: {
+    width: "80%",
+    marginTop: 15,
+  },
 });

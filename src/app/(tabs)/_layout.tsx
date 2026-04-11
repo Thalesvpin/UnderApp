@@ -1,8 +1,8 @@
+import { CurvedBottomTabs } from "@/components/organisms/curved-bottom-tabs/curved-bottom-tabs";
 import { AuthContext } from "@/utils/authContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
 import { useContext } from "react";
-import { CurvedBottomTabs } from "@/components/base/curved-bottom-tabs";
 
 export default function TabsLayout() {
   const authState = useContext(AuthContext);
@@ -17,13 +17,10 @@ export default function TabsLayout() {
 
   return (
     <Tabs
-			tabBar={(props) => 
-				<CurvedBottomTabs {...props} 
-					
-					gradients={["#4287f5", "#0d1b2a"]} 
-				/>
-			}
-		>
+      tabBar={(props) => (
+        <CurvedBottomTabs {...props} gradients={["#4287f5", "#0d1b2a"]} />
+      )}
+    >
       <Tabs.Screen
         name="index"
         options={{
