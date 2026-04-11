@@ -7,6 +7,7 @@ import { Link, router } from "expo-router";
 import { useContext, useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { ClickableCard } from "@/components/clickable-card";
+import { ProfilePageOptButton } from "@/components/profile-page-opt-button";
 
 export default function Profile() {
 	const authContext = useContext(AuthContext);
@@ -32,7 +33,7 @@ export default function Profile() {
 					style={globalStyles.profilePicture}
 					source={require("@/assets/mordecai.png")}
 				/>
-				<Pressable
+				{/* <Pressable
 					style={({ pressed }) => [
 						globalStyles.editAvatarBtn,
 						pressed && globalStyles.editAvatarBtnPressed,
@@ -42,49 +43,47 @@ export default function Profile() {
 					accessibilityLabel="Editar foto do perfil"
 				>
 					<Ionicons name="create-outline" size={22} color="#000000" />
-				</Pressable>
+				</Pressable> */}
 			</View>
 			<Text>{username ? username : 'NAME PLACEHOLDER'}</Text>
 
 			<View style={styles.profileOptions}>
 
-				<ClickableCard style={styles.btnGap}>
-					<Ionicons name="person-outline" size={22} color="#000000" />
-					<Text>Editar Perfil</Text>
-				</ClickableCard>
+				<ProfilePageOptButton 
+					icon="person-outline" 
+					text="Editar Perfil" 
+					onPress={() => router.push("/edit-profile")}
+				/>
 
-				<Link href="/wip" asChild style={styles.btnGap}>
-					<ClickableCard style={styles.btnGap} onPress={checkToken}>
-						<Ionicons name="document-text-outline" size={22} color="#000000" />
-						<Text>Meus Relatos</Text>
-					</ClickableCard>
-				</Link>
+				<ProfilePageOptButton 
+					icon="document-text-outline" 
+					text="Meus Relatos" 
+					onPress={() => router.push("/wip")} 
+				/>
 
-				<Link href="/wip" asChild style={styles.btnGap}>
-					<ClickableCard style={styles.btnGap}>
-						<Ionicons name="map-outline" size={22} color="#000000" />
-						<Text>Gerenciar Áreas Monitoradas</Text>
-					</ClickableCard>
-				</Link>
+				<ProfilePageOptButton 
+					icon="map-outline" 
+					text="Gerenciar Áreas Monitoradas" 
+					onPress={() => router.push("/wip")} 
+				/>
 
-				<Link href="/wip" asChild style={styles.btnGap}>
-					<ClickableCard style={styles.btnGap}>
-						<Ionicons name="settings-outline" size={22} color="#000000" />
-						<Text>Configurações do App</Text>
-					</ClickableCard>
-				</Link> 
+				<ProfilePageOptButton 
+					icon="settings-outline" 
+					text="Configurações do App" 
+					onPress={() => router.push("/wip")} 
+				/>
 
-				<Link href="/wip" asChild style={styles.btnGap}>
-					<ClickableCard style={styles.btnGap} onPress={donwloadReport}>
-						<Ionicons name="podium-outline" size={22} color="#000000" />
-						<Text>Gerar Relatório</Text>
-					</ClickableCard>
-				</Link>
+				<ProfilePageOptButton 
+					icon="podium-outline" 
+					text="Gerar Relatório" 
+					onPress={() => router.push("/wip")} 
+				/>
 
-				<ClickableCard style={styles.btnGap} onPress={logOut}>
-					<Ionicons name="exit-outline" size={22} color="#000000" />
-					<Text>Sair</Text>
-				</ClickableCard>
+				<ProfilePageOptButton 
+					icon="exit-outline" 
+					text="Sair" 
+					onPress={logOut} 
+				/>
 
 			</View>
 	  </View>
