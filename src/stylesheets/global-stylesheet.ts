@@ -2,9 +2,11 @@ import { StyleSheet } from "react-native";
 
 const AVATAR_SIZE = 150;
 
+export const colorBg = '#d2e8ff';
+
 export const globalStyles = StyleSheet.create({
 	bgColor:{
-		backgroundColor: '#d2e8ff',
+		backgroundColor: colorBg,
 	},
 	title:{
 		fontSize: 24,

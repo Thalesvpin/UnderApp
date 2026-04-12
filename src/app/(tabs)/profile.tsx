@@ -1,36 +1,41 @@
 import { ProfilePageOptButton } from "@/components/molecules/profile-page-opt-button";
 import { globalStyles } from "@/stylesheets/global-stylesheet";
 import { AuthContext } from "@/utils/authContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Ionicons } from "@expo/vector-icons";
-import { Link, router } from "expo-router";
-import { useContext, useEffect, useState } from "react";
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { ClickableCard } from "@/components/clickable-card";
-import UserService, { UserInfo } from "@/services/user.service";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useContext, useState } from "react";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import UserService from "@/services/user.service";
+import { UserInfo } from "@/utils/types";
+import Toast from "react-native-toast-message";
 
 export default function Profile() {
 	const authContext = useContext(AuthContext);
   const [username, setUsername] = useState('');
-	const [userInfo, setUserInfo] = useState<UserInfo>({});
+	const [userInfo, setUserInfo] = useState<UserInfo>();
 	const [profilePicture, setProfilePicture] = useState('');
 
 	async function getUserInfo() {
-		UserService.getUserInfo().then(async (response) => {
-			if (response.ok) {
-				const {data} = await response.json();
-				setUserInfo(data);
-				setUsername(data.firstName + ' ' + data.lastName);
-				setProfilePicture(data.profileImageUrl);
-			}
-		}).catch((error) => {
+		try{
+			const data = await UserService.getUserInfo();
+			setUserInfo(data);
+			setUsername(data.firstName + ' ' + data.lastName);
+			setProfilePicture(data.profileImageUrl);
+		}
+		catch (error) {
 			console.error(error);
-		});
+			Toast.show({
+				type: "error",
+				text1: "Erro ao carregar informações do usuário",
+				text2: "Por favor, tente novamente mais tarde",
+			});
+		}
 	}
 	
-	useEffect(() => {
-		getUserInfo();
-	}, []);
+	useFocusEffect(
+    useCallback(() => {
+      getUserInfo();
+    }, [])
+  );
 
   function logOut() {
     console.log("Loging out...");
@@ -45,7 +50,7 @@ export default function Profile() {
 					style={globalStyles.profilePicture}
 					source={profilePicture ? {uri: profilePicture} : require("@/assets/default-avatar.png")}
 				/>
-				<Pressable
+				{/* <Pressable
 					style={({ pressed }) => [
 						globalStyles.editAvatarBtn,
 						pressed && globalStyles.editAvatarBtnPressed,
@@ -99,15 +104,6 @@ export default function Profile() {
       </View>
     </ScrollView>
   );
-}
-
-async function checkToken() {
-  const token = await AsyncStorage.getItem("userToken");
-  if (!token) {
-    console.log("Token: null");
-    return;
-  }
-  console.log("Token:", JSON.parse(token));
 }
 
 function donwloadReport() {
