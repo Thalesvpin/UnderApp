@@ -22,34 +22,39 @@ export default function EditProfile() {
 	async function getUserInfo() {
 		console.log("Getting user info...");
 
-		UserService.getUserInfo().then(async (response) => {
-			if (response.ok) {
-				const {data} = await response.json();
-				setUserInfo(data);
-			}
-		}).catch((error) => {
+		try{
+			const data = await UserService.getUserInfo();
+			setUserInfo(data);
+		}
+		catch (error) {
 			console.error(error);
-		});
+			Toast.show({
+				type: "error",
+				text1: "Erro ao carregar informações do usuário",
+				text2: "Por favor, tente novamente mais tarde",
+			});
+		}
 	}
 
   async function saveUserInfo(newUserInfo: UpdateUserInfo) {
     console.log("Saving user info...");
-    UserService.updateUserInfo(newUserInfo).then(async (response) => {
-      if (response.ok) {
-        const {data} = await response.json();
-        setUserInfo(data);
-				Toast.show({
-          type: "success",
-          text1: "Perfil atualizado com sucesso",
-        });
-      } else {
-        Toast.show({
-					type: "error",
-					text1: "Erro ao atualizar perfil",
-					text2: "Por favor, tente novamente mais tarde",
-				});
-      }
-    });
+
+		try{
+			const data = await UserService.updateUserInfo(newUserInfo);
+			setUserInfo(data);
+			Toast.show({
+				type: "success",
+				text1: "Perfil atualizado com sucesso",
+			});
+		}
+		catch (error) {
+			console.error(error);
+			Toast.show({
+				type: "error",
+				text1: "Erro ao atualizar perfil",
+				text2: "Por favor, tente novamente mais tarde",
+			});
+		}
   }
 
   useEffect(() => {

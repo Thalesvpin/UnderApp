@@ -23,7 +23,7 @@ export function EditProfileForm({ userInfo, onSubmit }: EditProfileFormProps) {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    await onSubmit(newUserInfo ?? {});
+    await onSubmit(newUserInfo);
     setIsLoading(false);
   };
 

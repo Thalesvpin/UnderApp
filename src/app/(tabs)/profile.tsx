@@ -1,12 +1,12 @@
 import { ProfilePageOptButton } from "@/components/molecules/profile-page-opt-button";
 import { globalStyles } from "@/stylesheets/global-stylesheet";
 import { AuthContext } from "@/utils/authContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useContext, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import UserService from "@/services/user.service";
 import { UserInfo } from "@/utils/types";
+import Toast from "react-native-toast-message";
 
 export default function Profile() {
 	const authContext = useContext(AuthContext);
@@ -15,16 +15,20 @@ export default function Profile() {
 	const [profilePicture, setProfilePicture] = useState('');
 
 	async function getUserInfo() {
-		UserService.getUserInfo().then(async (response) => {
-			if (response.ok) {
-				const {data} = await response.json();
-				setUserInfo(data);
-				setUsername(data.firstName + ' ' + data.lastName);
-				setProfilePicture(data.profileImageUrl);
-			}
-		}).catch((error) => {
+		try{
+			const data = await UserService.getUserInfo();
+			setUserInfo(data);
+			setUsername(data.firstName + ' ' + data.lastName);
+			setProfilePicture(data.profileImageUrl);
+		}
+		catch (error) {
 			console.error(error);
-		});
+			Toast.show({
+				type: "error",
+				text1: "Erro ao carregar informações do usuário",
+				text2: "Por favor, tente novamente mais tarde",
+			});
+		}
 	}
 	
 	useFocusEffect(
@@ -100,15 +104,6 @@ export default function Profile() {
       </View>
     </ScrollView>
   );
-}
-
-async function checkToken() {
-  const token = await AsyncStorage.getItem("userToken");
-  if (!token) {
-    console.log("Token: null");
-    return;
-  }
-  console.log("Token:", JSON.parse(token));
 }
 
 function donwloadReport() {
