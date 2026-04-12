@@ -1,7 +1,10 @@
-import { Ionicons } from "@expo/vector-icons";
+import { CustomBottomSheet } from "@/components/organisms/custom-bottom-sheet";
+import BottomSheet from "@/components/organisms/reactix/bottom-sheet/bottom-sheet";
+import { BottomSheetMethods } from "@/components/organisms/reactix/bottom-sheet/types";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ColorValue, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ColorValue, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { default as Map, default as MapView, Marker, UrlTile } from "react-native-maps";
 
 const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
@@ -97,6 +100,12 @@ export default function Index() {
     );
   };
 
+	const sheetRef = useRef<BottomSheetMethods>(null);
+
+	const renderContent = () => {
+		sheetRef.current?.snapToIndex(0)
+	}
+
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Map
@@ -140,6 +149,7 @@ export default function Index() {
 							latitude: marker.latitude,
 							longitude: marker.longitude,
 						}}
+						onPress={renderContent}
 					>
 						<Ionicons name={marker.icon} size={30} color={marker.color} />
 					</Marker>
@@ -148,6 +158,8 @@ export default function Index() {
       <TouchableOpacity style={styles.button} onPress={handleCenter}>
         <Ionicons name="locate" size={28} color="#000" />
       </TouchableOpacity>
+
+			<CustomBottomSheet sheetRef={sheetRef} />
     </View>
   );
 }
