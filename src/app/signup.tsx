@@ -1,6 +1,7 @@
 import { SignupForm } from "@/components/organisms/signup-form";
 import AuthService from "@/services/auth.service";
 import { globalStyles } from "@/stylesheets/global-stylesheet";
+import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import {
 	Image,
@@ -9,6 +10,7 @@ import {
 	ScrollView,
 	Text,
 	View,
+	StyleSheet,
 } from "react-native";
 import Toast from "react-native-toast-message";
 
@@ -82,6 +84,7 @@ export default function Signup() {
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
       >
+				<Ionicons name="arrow-back" size={24} color="black" onPress={() => router.back()} style={styles.backButton} />
         <View style={globalStyles.loginSignupContainer}>
           <Image
             style={globalStyles.logo}
@@ -95,3 +98,11 @@ export default function Signup() {
     </KeyboardAvoidingView>
   );
 }
+
+const styles = StyleSheet.create({
+  backButton: {
+    position: "absolute",
+    top: 50,
+    left: 20,
+  },
+});
