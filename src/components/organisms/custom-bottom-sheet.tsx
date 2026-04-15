@@ -1,14 +1,15 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ColorValue, StyleSheet, Text, View } from "react-native";
 import { BottomSheet } from "./reactix/bottom-sheet/bottom-sheet";
 import { BottomSheetMethods } from "./reactix/bottom-sheet/types";
-import { Feather } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import { Pressable } from "react-native";
 
 type CustomBottomSheetProps = {
   sheetRef: React.RefObject<BottomSheetMethods | null>;
+	marker: any;
 }
 
-export function CustomBottomSheet({ sheetRef }: CustomBottomSheetProps) {
+export function CustomBottomSheet({ sheetRef, marker }: CustomBottomSheetProps) {
 	const ListItem = ({
     icon,
     label,
@@ -28,88 +29,105 @@ export function CustomBottomSheet({ sheetRef }: CustomBottomSheetProps) {
       <Feather name="chevron-right" size={16} color="#444" />
     </Pressable>
   );
+	
+	const statusIcon = () => {
+		let color: ColorValue;
+		let icon: keyof typeof Ionicons.glyphMap;
+
+		switch (marker.severity) {
+			case 'low':
+				color = 'green';
+				icon = 'ellipse';
+				break;
+			case 'medium':
+				color = 'yellow';
+				icon = 'ellipse';
+				break;
+			case 'high':
+				color = 'orange';
+				icon = 'ellipse';
+				break;
+			case 'very-high':
+				color = 'red';
+				icon = 'ellipse';
+				break;
+			case 'critical':
+				color = 'red';
+				icon = 'alert-circle';
+				break;
+			default:
+				color = 'gray';
+				icon = 'ellipse';
+				break;
+		}
+		return <Ionicons name={icon} size={18} color={color} />;
+	}
 
   return (
     <BottomSheet
-        ref={sheetRef}
-        snapPoints={["25%", "50%", "90%"]}
-        backgroundColor="#1c1c1e"
-        backdropOpacity={0.6}
-        borderRadius={28}
-      >
-        <View style={styles.sheet}>
-          {/* Header */}
-          <View style={styles.header}>
-            <View style={styles.avatar}>
-              <Feather name="user" size={32} color="#fff" />
-            </View>
-            <Text
-              style={[
-                styles.name,
-              ]}
-            >
-              John Doe
-            </Text>
-            <Text
-              style={[
-                styles.email,
-              ]}
-            >
-              john@example.com
-            </Text>
-          </View>
-          {/* Action Row */}
-          <View style={styles.row}>
-            <Pressable style={styles.rowItem}>
-              <Feather name="edit-2" size={18} color="#0a84ff" />
-              <Text
-                style={[
-                  styles.rowText,
-                ]}
-              >
-                Edit
-              </Text>
-            </Pressable>
-            <View style={styles.rowDivider} />
-            <Pressable style={styles.rowItem}>
-              <Feather name="log-out" size={18} color="#ff453a" />
-              <Text
-                style={[
-                  styles.rowText,
-                  { color: "#ff453a" },
-                ]}
-              >
-                Logout
-              </Text>
-            </Pressable>
-          </View>
-          {/* General Section */}
-          <Text
-            style={[
-              styles.sectionTitle,
-            ]}
-          >
-            General
-          </Text>
-          <View style={styles.list}>
-            <ListItem icon="bell" label="Notifications" />
-            <ListItem icon="moon" label="Appearance" />
-            <ListItem icon="globe" label="Language" isLast />
-          </View>
-          {/* Privacy Section */}
-          <Text
-            style={[
-              styles.sectionTitle,
-            ]}
-          >
-            Privacy
-          </Text>
-          <View style={styles.list}>
-            <ListItem icon="lock" label="Security" />
-            <ListItem icon="shield" label="Data" isLast />
-          </View>
-        </View>
-      </BottomSheet>
+			ref={sheetRef}
+			snapPoints={["25%", "50%", "90%"]}
+			backgroundColor="#1c1c1e"
+			backdropOpacity={0.6}
+			borderRadius={28}
+		>
+			<View style={styles.sheet}>
+				{/* Header */}
+				<View style={styles.header}>
+					<View style={styles.w70}>
+						<Text style={styles.headerText}>
+							{marker?.title ? marker.title : ('Resumo de Ocorriência')}
+						</Text>
+						<View style={styles.status}>
+							{statusIcon()}
+							<Text style={styles.statusText}>{marker?.severity ? marker.severity : 'Severidade'}</Text>
+						</View>
+					</View>
+					<View>
+						<Pressable onPress={() => {console.log('share')}}>
+							<Ionicons name="share-social-outline" size={24} color="white" />
+						</Pressable>
+					</View>
+				</View>
+				
+				<View style={styles.hLine}></View>
+
+				{/* Action Row */}
+				<View>
+					<Text style={styles.date}>
+						Atualizado em: --:--  --/--/----
+					</Text>
+
+					<Text style={styles.sectionTitle}>Local</Text>
+					<View style={styles.infoBox}>
+						<Text style={styles.descriptionText}>Nome da rua?</Text>
+					</View>
+
+					<Text style={styles.sectionTitle}>Descrição</Text>
+					<View style={styles.infoBox}>
+						<Text style={styles.descriptionText}>
+							{marker?.description ? marker.description : 'Descrição da ocorrência'}
+						</Text>
+					</View>
+				</View>
+				
+				{/* Temprorario */}
+				<View style={{height: 400}}></View>
+				
+				{/* Privacy Section */}
+				<Text
+					style={[
+						styles.sectionTitle,
+					]}
+				>
+					Privacy
+				</Text>
+				<View style={styles.list}>
+					<ListItem icon="lock" label="Security" />
+					<ListItem icon="shield" label="Data" isLast />
+				</View>
+			</View>
+		</BottomSheet>
   );
 }
 
@@ -136,27 +154,15 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   header: {
-    alignItems: "center",
-    marginBottom: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 10,
   },
-  avatar: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: "#2c2c2e",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 12,
-  },
-  name: {
-    fontSize: 20,
-    color: "#fff",
-    marginBottom: 4,
-  },
-  email: {
-    fontSize: 14,
-    color: "#666",
-  },
+	headerText: {
+		fontSize: 20,
+		color: '#fff',
+		marginBottom: 4,
+	},
   row: {
     flexDirection: "row",
     backgroundColor: "#2c2c2e",
@@ -210,5 +216,39 @@ const styles = StyleSheet.create({
     color: "#fff",
     marginLeft: 12,
   },
-
+	hLine: {
+		height: StyleSheet.hairlineWidth,
+    backgroundColor: "#5c5c61",
+    alignSelf: "stretch",
+		marginVertical: 16,
+		marginHorizontal: -20,
+	},
+	date: {
+		fontSize: 13,
+		color: "#fff",
+		marginBottom: 8,
+		marginLeft: 4,
+		alignSelf: 'flex-end',
+	},
+	infoBox: {
+		backgroundColor: "#2c2c2e",
+		borderRadius: 14,
+		padding: 14,
+		marginBottom: 20,
+	},
+	descriptionText: {
+		fontSize: 15,
+		color: "#fff",
+	},
+	w70: {
+		width: '70%',
+	},
+	status: {
+		flexDirection: 'row',
+		gap: 4,
+	},
+	statusText: {
+		fontSize: 13,
+		color: '#fff',
+	},
 });
