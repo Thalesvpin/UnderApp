@@ -14,12 +14,22 @@ export default function Profile() {
 	const [userInfo, setUserInfo] = useState<UserInfo>();
 	const [profilePicture, setProfilePicture] = useState('');
 
+	
+	function reloadProfilePicture(imageUrl: string) {
+		const bust = Date.now();
+		const uriWithBust = imageUrl
+			? `${imageUrl}${imageUrl.includes('?') ? '&' : '?'}v=${bust}`
+			: '';
+		
+		setProfilePicture(uriWithBust);
+	}
+
 	async function getUserInfo() {
 		try{
 			const data = await UserService.getUserInfo();
 			setUserInfo(data);
 			setUsername(data.firstName + ' ' + data.lastName);
-			setProfilePicture(data.profileImageUrl);
+			reloadProfilePicture(data.profileImageUrl);
 		}
 		catch (error) {
 			console.error(error);
