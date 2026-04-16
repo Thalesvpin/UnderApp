@@ -1,7 +1,10 @@
-import { Ionicons } from "@expo/vector-icons";
+import { CustomBottomSheet } from "@/components/organisms/custom-bottom-sheet";
+import BottomSheet from "@/components/organisms/reactix/bottom-sheet/bottom-sheet";
+import { BottomSheetMethods } from "@/components/organisms/reactix/bottom-sheet/types";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ColorValue, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ColorValue, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { default as Map, default as MapView, Marker, UrlTile } from "react-native-maps";
 
 const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
@@ -10,24 +13,69 @@ const defaultCoords = {
 	latitude: -22.511593970585,
 	longitude: -43.17846632428288,
 }
+type MarkerData = {
+	id: number;
+	icon: keyof typeof Ionicons.glyphMap;
+	severity: string,
+	latitude: number;
+	longitude: number;
+	title: string;
+};
 
 export default function Index() {
-	type MarkerData = {
-		id: number;
-		icon: keyof typeof Ionicons.glyphMap;
-		color: ColorValue,
-		latitude: number;
-		longitude: number;
-	};
-
   const [coordinates, setCoordinates] = useState<Location.LocationObjectCoords | null>(null);
   const [markers, setMarkers] = useState<MarkerData[]>([
-		{ id: 1, icon: 'location', color: 'red', latitude: -22.511611632520278, longitude: -43.17846446198439 },
-		{ id: 2, icon: 'location', color: 'blue', latitude: -22.5094878268097, longitude: -43.182550472633665 },
+		{ id: 1, icon: 'location', severity: 'low', latitude: -22.511611632520278, longitude: -43.17846446198439, title: 'CEFET/RJ' },
+		{ id: 2, icon: 'location', severity: 'high', latitude: -22.5094878268097, longitude: -43.182550472633665, title: 'Praça da Liberdade' },
   ]);
   const mapRef = useRef<MapView | null>(null);
   const watchRef = useRef<Location.LocationSubscription | null>(null);
+	const [currentMarker, setCurrentMarker] = useState<MarkerData | null>(null);
 
+	function markerPlotter(marker: MarkerData) {
+		let color: ColorValue;
+		let icon: keyof typeof Ionicons.glyphMap;
+
+		switch (marker.severity) {
+			case 'low':
+				color = 'green';
+				icon = 'location';
+				break;
+			case 'medium':
+				color = 'yellow';
+				icon = 'location';
+				break;
+			case 'high':
+				color = 'orange';
+				icon = 'location';
+				break;
+			case 'very-high':
+				color = 'red';
+				icon = 'location';
+				break;
+			case 'critical':
+				color = 'red';
+				icon = 'alert-circle';
+				break;
+			default:
+				color = 'gray';
+				icon = 'location';
+				break;
+		}
+	
+		return (
+			<Marker
+				key={marker.id}
+				coordinate={{
+					latitude: marker.latitude,
+					longitude: marker.longitude,
+				}}
+				onPress={() => renderContent(marker)}
+			>
+				<Ionicons name={icon} size={30} color={color} />
+			</Marker>
+		);
+	}
   const stopTracking = useCallback(() => {
     watchRef.current?.remove();
     watchRef.current = null;
@@ -97,6 +145,13 @@ export default function Index() {
     );
   };
 
+	const sheetRef = useRef<BottomSheetMethods>(null);
+
+	const renderContent = (marker: MarkerData) => {
+		setCurrentMarker(marker);
+		sheetRef.current?.snapToIndex(0)
+	}
+
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Map
@@ -134,20 +189,31 @@ export default function Index() {
 					</Marker>
 				) : null}
 				{markers.map(marker => (
-					<Marker
-						key={marker.id}
-						coordinate={{
-							latitude: marker.latitude,
-							longitude: marker.longitude,
-						}}
-					>
-						<Ionicons name={marker.icon} size={30} color={marker.color} />
-					</Marker>
+					markerPlotter(marker)
+					// <Marker
+					// 	key={marker.id}
+					// 	coordinate={{
+					// 		latitude: marker.latitude,
+					// 		longitude: marker.longitude,
+					// 	}}
+					// 	onPress={renderContent}
+					// >
+					// 	<Ionicons name={marker.icon} size={30} color={marker.color} />
+					// </Marker>
 				))}
 			</Map>
-      <TouchableOpacity style={styles.button} onPress={handleCenter}>
-        <Ionicons name="locate" size={28} color="#000" />
-      </TouchableOpacity>
+			<View style={styles.buttonsWrapper}>
+      	{coordinates && 
+					<TouchableOpacity style={styles.button} onPress={handleCenter}>
+						<Ionicons name="locate" size={28} color="#000" />
+					</TouchableOpacity>
+				}
+				<TouchableOpacity style={styles.button}>
+					<Ionicons name="add" size={28} color="#000" />
+				</TouchableOpacity>
+			</View>
+
+			<CustomBottomSheet sheetRef={sheetRef} marker={currentMarker} />
     </View>
   );
 }
@@ -161,16 +227,23 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: "#fff",
   },
-  button: {
+  buttonsWrapper: {
     position: "absolute",
     bottom: 80,
     right: 20,
-    backgroundColor: "#fff",
+		gap: 10,
+  },
+	button: {
+		backgroundColor: "#fff",
     padding: 12,
     borderRadius: 50,
-    elevation: 5, // Android
-    shadowColor: "#000", // iOS
+    elevation: 5,
+    shadowColor: "#000",
     shadowOpacity: 0.3,
     shadowRadius: 4,
-  },
+	},
+
+
+	
+
 });
