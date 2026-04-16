@@ -2,9 +2,20 @@ import { StyleSheet } from "react-native";
 
 const AVATAR_SIZE = 150;
 
+export const colorOffWhite = '#f5f5f5';
+export const colorBlue = '#007bff';
+export const colorOrange = '#ff7b00';
+export const colorGreen = '#008000';
+export const colorRed = '#ff0000';
+export const colorPurple = '#8800c2';
+export const colorGray = '#808080';
+export const colorDarkGray = '#444444';
+
+export const colorBg = '#d2e8ff';
+
 export const globalStyles = StyleSheet.create({
 	bgColor:{
-		backgroundColor: '#d2e8ff',
+		backgroundColor: colorBg,
 	},
 	title:{
 		fontSize: 24,
@@ -48,6 +59,8 @@ export const globalStyles = StyleSheet.create({
 		width: AVATAR_SIZE,
 		height: AVATAR_SIZE,
 		borderRadius: AVATAR_SIZE / 2,
+		borderWidth: 4,
+		borderColor: 'white',
 		shadowColor: "#000",
 		shadowOffset: { width: 0, height: 2 },
 		shadowOpacity: 0.25,
@@ -92,5 +105,11 @@ export const globalStyles = StyleSheet.create({
 	errorText: {
 		color: "red",
 		transform: [{ translateY: -10 }],
+	},
+	flexRow: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 10,
 	},
 })
