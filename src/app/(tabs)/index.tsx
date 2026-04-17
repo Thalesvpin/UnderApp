@@ -1,6 +1,7 @@
 import { CustomBottomSheet } from "@/components/organisms/custom-bottom-sheet";
 import BottomSheet from "@/components/organisms/reactix/bottom-sheet/bottom-sheet";
 import { BottomSheetMethods } from "@/components/organisms/reactix/bottom-sheet/types";
+import { MarkerData } from "@/utils/types";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -13,20 +14,12 @@ const defaultCoords = {
 	latitude: -22.511593970585,
 	longitude: -43.17846632428288,
 }
-type MarkerData = {
-	id: number;
-	icon: keyof typeof Ionicons.glyphMap;
-	severity: string,
-	latitude: number;
-	longitude: number;
-	title: string;
-};
 
 export default function Index() {
   const [coordinates, setCoordinates] = useState<Location.LocationObjectCoords | null>(null);
   const [markers, setMarkers] = useState<MarkerData[]>([
-		{ id: 1, icon: 'location', severity: 'low', latitude: -22.511611632520278, longitude: -43.17846446198439, title: 'CEFET/RJ' },
-		{ id: 2, icon: 'location', severity: 'high', latitude: -22.5094878268097, longitude: -43.182550472633665, title: 'Praça da Liberdade' },
+		{ id: 1, icon: 'location', severity: 'low', latitude: -22.511611632520278, longitude: -43.17846446198439, title: 'CEFET/RJ', description: 'Descrição da ocorrência' },
+		{ id: 2, icon: 'location', severity: 'high', latitude: -22.5094878268097, longitude: -43.182550472633665, title: 'Praça da Liberdade', description: 'Descrição da ocorrência' },
   ]);
   const mapRef = useRef<MapView | null>(null);
   const watchRef = useRef<Location.LocationSubscription | null>(null);

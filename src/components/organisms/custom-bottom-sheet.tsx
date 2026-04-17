@@ -3,10 +3,11 @@ import { BottomSheet } from "./reactix/bottom-sheet/bottom-sheet";
 import { BottomSheetMethods } from "./reactix/bottom-sheet/types";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { Pressable } from "react-native";
+import { MarkerData } from "@/utils/types";
 
 type CustomBottomSheetProps = {
   sheetRef: React.RefObject<BottomSheetMethods | null>;
-	marker: any;
+	marker: MarkerData | null;
 }
 
 export function CustomBottomSheet({ sheetRef, marker }: CustomBottomSheetProps) {
@@ -31,6 +32,8 @@ export function CustomBottomSheet({ sheetRef, marker }: CustomBottomSheetProps) 
   );
 	
 	const statusIcon = () => {
+		if (!marker) return null;
+		
 		let color: ColorValue;
 		let icon: keyof typeof Ionicons.glyphMap;
 
