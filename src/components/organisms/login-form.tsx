@@ -32,28 +32,31 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
   return (
     <View style={globalStyles.cardBg}>
       <View style={globalStyles.loginFields}>
-        <View style={globalStyles.inputIcon}>
-          <Ionicons name="mail" size={20} color="gray" />
-          <Text>Email</Text>
+        <View>
+        	<View style={globalStyles.inputIcon}>
+        	  <Ionicons name="mail" size={20} color="gray" />
+        	  <Text>Email</Text>
+        	</View>
+        	<EmailInput
+        	  value={email}
+        	  onChangeText={setEmail}
+        	  placeholder="Insira seu email"
+        	  keyboardType="email-address"
+        	/>
         </View>
-        <EmailInput
-          value={email}
-          onChangeText={setEmail}
-          placeholder="Insira seu email"
-          keyboardType="email-address"
-        />
 
-        <View style={globalStyles.inputIcon}>
-          <Ionicons name="lock-closed" size={20} color="gray" />
-          <Text>Senha</Text>
-        </View>
-        <PasswordInput
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Insira sua senha"
-        />
+        <View>
+					<View style={globalStyles.inputIcon}>
+						<Ionicons name="lock-closed" size={20} color="gray" />
+						<Text>Senha</Text>
+					</View>
+					<PasswordInput
+						value={password}
+						onChangeText={setPassword}
+						placeholder="Insira sua senha"
+					/>
+				</View>
 
-        {/* <Button label="Entrar" onPress={() => onSubmit(email, password)} /> */}
         <View style={globalStyles.hCenter}>
           <LoaderButton
             label="Entrar"
@@ -78,13 +81,5 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
 const styles = StyleSheet.create({
   createAccountText: {
     marginTop: 20,
-  },
-  tet: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "red",
-    width: "100%",
   },
 });

@@ -10,6 +10,5 @@ const styles = {
 		borderColor: '#0011ff53',
 		borderRadius: 10,
 		padding: 10,
-		marginBottom: 15,
 	}
 }

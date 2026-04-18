@@ -32,6 +32,7 @@ export const globalStyles = StyleSheet.create({
 	},
 	loginFields:{
 		width: '93%',
+		gap: 15,
 	},
 	border: {
 		borderWidth: 1,
