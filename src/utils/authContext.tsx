@@ -1,6 +1,7 @@
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
+import UserService from "@/services/user.service";
 
 type AuthState = {
 	isLoggedIn: boolean;
@@ -34,20 +35,33 @@ export function AuthProvider({ children }: PropsWithChildren) {
 		router.replace("/login");
 	}
 
+	function isNonEmptyToken(token: string | null): token is string {
+		return typeof token === "string" && token.trim().length > 0;
+	}
+
 	useEffect(() => {
-		const getAuthFromStorage = async () => {
-			try{
-				const token = await SecureStore.getItemAsync('token');
-				if(token !== null && token !== undefined){
-					setIsLoggedIn(true)
+		let cancelled = false;
+		(async () => {
+			try {
+				const token = await SecureStore.getItemAsync("token");
+				if (!isNonEmptyToken(token)) {
+					if (!cancelled) setIsLoggedIn(false);
+					return;
 				}
+				await UserService.getUserInfo();
+				if (!cancelled) setIsLoggedIn(true);
+			} 
+			catch {
+				await SecureStore.deleteItemAsync("token");
+				if (!cancelled) setIsLoggedIn(false);
+			} 
+			finally {
+				if (!cancelled) setIsReady(true);
 			}
-			catch(error){
-				console.log('Error fetching auth state', error)
-			}
-			setIsReady(true);
-		}
-		getAuthFromStorage();
+		})();
+		return () => {
+			cancelled = true;
+		};
 	}, []);
 
 	return (
