@@ -1,4 +1,4 @@
-import { globalStyles } from "@/stylesheets/global-stylesheet";
+import { colorBlue, colorGreen, colorPurple, globalStyles } from "@/stylesheets/global-stylesheet";
 import { CEP_REGEX, EMAIL_REGEX, NAME_REGEX } from "@/utils/regex";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import { EmailInput } from "../molecules/inputs/email-input";
 import { NameInput } from "../molecules/inputs/name-input";
 import { LoaderButton } from "../molecules/loader-button";
 import { UpdateUserInfo, UserInfo } from "@/utils/types";
+import { IconWithBackground } from "../atoms/icon-with-background";
 
 type EditProfileFormProps = {
   userInfo: UserInfo;
@@ -16,6 +17,8 @@ type EditProfileFormProps = {
 export function EditProfileForm({ userInfo, onSubmit }: EditProfileFormProps) {
   const [newUserInfo, setNewUserInfo] = useState<UpdateUserInfo>({firstName: '', lastName: '', email: '', cep: ''});
   const [isLoading, setIsLoading] = useState(false);
+
+	const iconSize = 30;
 
 	useEffect(() => {
 		setNewUserInfo(userInfo);
@@ -43,43 +46,49 @@ export function EditProfileForm({ userInfo, onSubmit }: EditProfileFormProps) {
   return (
     <View style={globalStyles.cardBg}>
       <View style={styles.formGroup}>
-        <View style={globalStyles.inputIcon}>
-          <Ionicons name="person" size={22} color="gray" />
-          <Text>Nome</Text>
-        </View>
-        <NameInput
-          value={newUserInfo.firstName}
-          onChangeText={(text) =>
-            setNewUserInfo({ ...newUserInfo, firstName: text })
-          }
-          placeholder="Nome"
-        />
+        <View style={styles.fieldContainer}>
+					<IconWithBackground icon="person-outline" iconColor={colorBlue} iconSize={iconSize} />
+					<View style={styles.fieldText}>
+						<Text>Nome</Text>
+						<NameInput
+							value={newUserInfo.firstName}
+							onChangeText={(text) =>
+								setNewUserInfo({ ...newUserInfo, firstName: text })
+							}
+							placeholder="Nome"
+						/>
+					</View>
+				</View>
 
-        <View style={globalStyles.inputIcon}>
-          <Ionicons name="person" size={22} color="gray" />
-          <Text>Sobrenome</Text>
-        </View>
-        <NameInput
-          value={newUserInfo.lastName}
-          onChangeText={(text) =>
-            setNewUserInfo({ ...newUserInfo, lastName: text })
-          }
-          placeholder="Sobrenome"
-        />
+        <View style={styles.fieldContainer}>
+					<IconWithBackground icon="person-outline" iconColor={colorBlue} iconSize={iconSize} />
+					<View style={styles.fieldText}>
+						<Text>Sobrenome</Text>
+						<NameInput
+							value={newUserInfo.lastName}
+							onChangeText={(text) =>
+								setNewUserInfo({ ...newUserInfo, lastName: text })
+							}
+							placeholder="Sobrenome"
+						/>
+					</View>
+				</View>
 
-        <View style={globalStyles.inputIcon}>
-          <Ionicons name="mail" size={22} color="gray" />
-          <Text>Email</Text>
-        </View>
-        <EmailInput
-          value={newUserInfo.email}
-          onChangeText={(text) =>
-            setNewUserInfo({ ...newUserInfo, email: text })
-          }
-          placeholder="Email"
-          keyboardType="email-address"
-          regex={true}
-        />
+        <View style={styles.fieldContainer}>
+					<IconWithBackground icon="mail-outline" iconColor={colorPurple} iconSize={iconSize} />
+					<View style={styles.fieldText}>
+						<Text>Email</Text>
+						<EmailInput
+							value={newUserInfo.email}
+							onChangeText={(text) =>
+								setNewUserInfo({ ...newUserInfo, email: text })
+							}
+							placeholder="Email"
+							keyboardType="email-address"
+							regex={true}
+						/>
+					</View>
+				</View>
 
         {/* <View style={globalStyles.inputIcon}>
 					<Ionicons name="person" size={20} color="gray" />
@@ -87,23 +96,26 @@ export function EditProfileForm({ userInfo, onSubmit }: EditProfileFormProps) {
 				</View>
 				<Input value={newUserInfo.cpf} style={{color: 'gray'}} editable={false} placeholder='CPF do usuário' keyboardType='numeric'/> */}
 
-        <View style={globalStyles.inputIcon}>
-          <Ionicons name="location" size={20} color="gray" />
-          <Text>CEP</Text>
-        </View>
-        <CepInput
-          value={newUserInfo.cep}
-          onChangeText={(text) => setNewUserInfo({ ...newUserInfo, cep: text })}
-          placeholder="CEP do usuário"
-          keyboardType="numeric"
-          regex={true}
-        />
+        <View style={styles.fieldContainer}>
+					<IconWithBackground icon="location-outline" iconColor={colorGreen} iconSize={iconSize} />
+					<View style={styles.fieldText}>
+						<Text>CEP</Text>
+						<CepInput
+							value={newUserInfo.cep}
+							onChangeText={(text) => setNewUserInfo({ ...newUserInfo, cep: text })}
+							placeholder="CEP do usuário"
+							keyboardType="numeric"
+							regex={true}
+						/>
+					</View>
+				</View>
 
         {/* <Button label="Salvar" /> */}
 
         <View style={globalStyles.hCenter}>
           <LoaderButton
             label="Salvar"
+						icon="save-outline"
             loadingText="Salvando..."
             isLoading={isLoading}
             onPress={handleSubmit}
@@ -117,6 +129,19 @@ export function EditProfileForm({ userInfo, onSubmit }: EditProfileFormProps) {
 
 const styles = StyleSheet.create({
   formGroup: {
-    width: "93%",
+    width: "100%",
   },
+	fieldContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 10,
+		marginBottom: 20,
+	},
+	fieldText: {
+		flex: 1,
+	},
+	icon:{
+		width: 32,
+		height: 32,
+	}
 });

@@ -17,11 +17,9 @@ export default function ProfileLayout() {
 						name="edit-profile"
 						options={{
 							title: "Editar Perfil",
-							headerStyle: {
-								backgroundColor: colorBg,
-							},
+							headerTransparent: true,
 							headerShadowVisible: false,
-							headerTintColor: '#000',
+							headerTintColor: '#fff',
 						}}
 					/>
 					<Stack.Screen

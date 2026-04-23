@@ -113,4 +113,13 @@ export const globalStyles = StyleSheet.create({
 		alignItems: 'center',
 		gap: 10,
 	},
+	profileOptionsSection: {
+		width: "100%",
+		height: "100%",
+		display: 'flex',
+		flexDirection: 'column',
+		borderRadius: 20,
+		backgroundColor: colorOffWhite,
+		paddingBottom: 100,
+	},
 })
