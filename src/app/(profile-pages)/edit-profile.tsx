@@ -1,14 +1,16 @@
 import { EditProfileForm } from "@/components/organisms/edit-profile-form";
-import { globalStyles } from "@/stylesheets/global-stylesheet";
+import { colorRed, globalStyles } from "@/stylesheets/global-stylesheet";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, Image, ImageBackground, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import UserService from "@/services/user.service";
 import { UpdateUserInfo, UserInfo } from "@/utils/types";
 import Toast from "react-native-toast-message";
 import * as ImagePicker from 'expo-image-picker';
 import Dropdown from "@/components/organisms/dropdown/dropdown";
+import { Button } from "@/components/atoms/reactix/button/button";
+import { LoaderButton } from "@/components/molecules/loader-button";
 
 const MAX_PROFILE_IMAGE_BYTES = 5 * 1024 * 1024;
 const emptyUserInfo: UserInfo = {
@@ -22,6 +24,7 @@ const emptyUserInfo: UserInfo = {
 export default function EditProfile() {
 	const [userInfo, setUserInfo] = useState<UserInfo>(emptyUserInfo);
 	const [profilePicture, setProfilePicture] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
 	
 	async function getUserInfo() {
 		console.log("Getting user info...");
@@ -212,47 +215,82 @@ export default function EditProfile() {
 		}
   }
 
+	function askYesNo(message: string): Promise<boolean> {
+		return new Promise((resolve) => {
+			Alert.alert("Confirmação", message, [
+				{ text: "Não", style: "cancel", onPress: () => resolve(false) },
+				{ text: "Sim", onPress: () => resolve(true) },
+			]);
+		});
+	}
+
+	async function deleteAccount() {
+		await askYesNo("Tem certeza que deseja deletar sua conta?")
+			.then((result) => {
+				if (result) {
+					setIsLoading(true);
+					
+				}
+			})
+		;
+	}
+
   useEffect(() => {
     getUserInfo();
   }, []);
 
   return (
-    <KeyboardAvoidingView
-      style={[{ flex: 1 }, globalStyles.bgColor]}
-      behavior={Platform.select({ ios: "padding", android: "padding" })}
-    >
-      <ScrollView>
-        <View style={styles.wrapper}>
-          <View style={[globalStyles.avatarWrap, styles.avatarWrap]}>
-            <Image
-              style={globalStyles.profilePicture}
-              source={profilePicture ? {uri: profilePicture} : require("@/assets/default-avatar.png")}
-            />
-						<Dropdown >
-							<Dropdown.Trigger style={globalStyles.editAvatarBtn}>
-								<Ionicons name="create-outline" size={20} color="#000" />
-							</Dropdown.Trigger>
-						
-							<Dropdown.Content style={styles.menu}>
-								<Dropdown.Item onPress={updateProfileImage}>
-									<Text style={styles.itemText}>Edit</Text>
-									<Ionicons name="pencil" size={16} color="#111" />
-								</Dropdown.Item>
-								
-								<Dropdown.Item onPress={deleteProfileImage}>
-									<Text style={[styles.itemText, styles.destructive]}>
-										Delete
-									</Text>
-									<Ionicons name="trash-outline" size={16} color="#dc2626" />
-								</Dropdown.Item>
-							</Dropdown.Content>
-						</Dropdown>
-          </View>
+		<KeyboardAvoidingView
+			style={[{ flex: 1 }, globalStyles.bgColor]}
+			behavior={Platform.select({ ios: "padding", android: "padding" })}
+		>
+    	<ImageBackground style={styles.bgImg} source={require("@/assets/blue-wallpaper.jpg")}>
+				<ScrollView style={{flex: 1}} contentContainerStyle={{ flexGrow: 1 }}>
+					<View style={styles.wrapper}>
+						<View style={[globalStyles.avatarWrap, styles.avatarWrap]}>
+							<Image
+								style={globalStyles.profilePicture}
+								source={profilePicture ? {uri: profilePicture} : require("@/assets/default-avatar.png")}
+							/>
+							<Dropdown >
+								<Dropdown.Trigger style={globalStyles.editAvatarBtn}>
+									<Ionicons name="create-outline" size={20} color="#000" />
+								</Dropdown.Trigger>
+							
+								<Dropdown.Content style={styles.menu}>
+									<Dropdown.Item onPress={updateProfileImage}>
+										<Text style={styles.itemText}>Edit</Text>
+										<Ionicons name="pencil" size={16} color="#111" />
+									</Dropdown.Item>
+									
+									<Dropdown.Item onPress={deleteProfileImage}>
+										<Text style={[styles.itemText, styles.destructive]}>
+											Delete
+										</Text>
+										<Ionicons name="trash-outline" size={16} color="#dc2626" />
+									</Dropdown.Item>
+								</Dropdown.Content>
+							</Dropdown>
+						</View>
 
-          <EditProfileForm userInfo={userInfo} onSubmit={saveUserInfo} />
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+						<View style={[globalStyles.profileOptionsSection, styles.profileOptionsSection]}>
+							<EditProfileForm userInfo={userInfo} onSubmit={saveUserInfo} />
+							
+							<LoaderButton 
+								label="Deletar conta"
+								loadingText="Deletando conta..."
+								isLoading={isLoading}
+								onPress={deleteAccount}
+								disabled={false}
+								icon="trash-outline"
+								color={colorRed}
+							/>
+						</View>
+
+					</View>
+				</ScrollView>
+			</ImageBackground>
+		</KeyboardAvoidingView>
   );
 }
 
@@ -265,6 +303,15 @@ const styles = StyleSheet.create({
   avatarWrap: {
     marginTop: 15,
   },
+  bgImg: {
+		flex: 1,
+		paddingTop: "22%",
+  },
+	profileOptionsSection: {
+		flex: 1,
+		alignItems: 'center',
+		gap: 25,
+	},
 
 	// dropdown styles
 	container: {

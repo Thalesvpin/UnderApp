@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
 import { ClickableCard } from "../atoms/clickable-card";
 import { colorGray } from "@/stylesheets/global-stylesheet";
+import { IconWithBackground } from "../atoms/icon-with-background";
 
 type ProfilePageOptButtonProps = {
   icon: keyof typeof Ionicons.glyphMap;
@@ -19,9 +20,7 @@ export function ProfilePageOptButton({
   return (
     <ClickableCard style={styles.btnConfig} onPress={onPress}>
       <View style={styles.btnContent}>
-				<View style={[styles.iconWrap, { backgroundColor: `${iconColor}20` }]}>
-					<Ionicons name={icon} size={22} color={iconColor} />
-				</View>
+				<IconWithBackground icon={icon} iconColor={iconColor} />
 				<Text>{text}</Text>
 			</View>
 			<Ionicons name="chevron-forward-outline" size={22} color={colorGray} />
@@ -43,12 +42,5 @@ const styles = StyleSheet.create({
   profileOptions: {
     width: "80%",
     marginTop: 15,
-  },
-  iconWrap: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });

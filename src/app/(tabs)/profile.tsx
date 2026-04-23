@@ -56,7 +56,7 @@ export default function Profile() {
 
   return (
 		<ImageBackground source={require("@/assets/blue-wallpaper.jpg")}>
-			<ScrollView style={[styles.bgImg]}>
+			<ScrollView>
 				<View style={[globalStyles.hCenter, styles.pageWrapper]}>
 					<View style={globalStyles.avatarWrap}>
 						<Image
@@ -66,7 +66,7 @@ export default function Profile() {
 					</View>
 					<Text style={styles.username}>Olá, {username ? username : "USERNAME"}</Text>
 	
-					<ScrollView style={styles.profileOptionsSection} contentContainerStyle={{alignItems: 'center'}}>
+					<ScrollView style={globalStyles.profileOptionsSection} contentContainerStyle={{alignItems: 'center'}}>
 						<View style={styles.profileOptions}>
 							<View style={styles.profileOptionsSubsection}>
 								<View style={globalStyles.flexRow}>
@@ -146,11 +146,6 @@ const styles = StyleSheet.create({
   pageWrapper: {
     paddingTop: "15%",
   },
-  bgImg: {
-    backgroundImage: require("@/assets/blue-wallpaper.jpg"),
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  },
   btnGap: {
     marginTop: 6,
     marginBottom: 6,
@@ -160,16 +155,6 @@ const styles = StyleSheet.create({
     width: "80%",
     marginTop: 15,
   },
-	profileOptionsSection: {
-		width: "100%",
-		height: "100%",
-		display: 'flex',
-		flexDirection: 'column',
-		// alignItems: 'center',
-		borderRadius: 20,
-		backgroundColor: colorOffWhite,
-		paddingBottom: 100,
-	},
 	username: {
 		fontSize: 20,
 		fontWeight: 'bold',

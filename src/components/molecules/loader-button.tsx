@@ -1,6 +1,7 @@
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, ColorValue } from "react-native";
 import { Button } from "../atoms/reactix/button/button";
 import { CircularLoader } from "../atoms/reactix/circular-loader/circular-loader";
+import { Ionicons } from "@expo/vector-icons";
 
 type LoaderButtonProps = {
 	loadingText: string;
@@ -8,9 +9,11 @@ type LoaderButtonProps = {
 	onPress: () => void;
 	label: string;
 	disabled: boolean;
+	icon?: keyof typeof Ionicons.glyphMap;
+	color?: ColorValue;
 }
 
-export function LoaderButton({ disabled, loadingText, isLoading, onPress, label }: LoaderButtonProps) {
+export function LoaderButton({ disabled, loadingText, isLoading, onPress, label, icon, color = '#007bff' }: LoaderButtonProps) {
 	return (
 		<Button
 			style={styles.border}
@@ -32,7 +35,8 @@ export function LoaderButton({ disabled, loadingText, isLoading, onPress, label 
 				</View>
 			)}
 		>
-			<View style={styles.btn}>
+			<View style={[styles.btn, { backgroundColor: color }]}>
+				{icon && <Ionicons name={icon} size={20} color="#fff" />}
 				<Text style={styles.btnText}>{label}</Text>
 			</View>
 		</Button>
@@ -47,11 +51,10 @@ const styles = StyleSheet.create({
     paddingTop: 110,
   },
   btn: {
-    flexDirection: "column",
+    flexDirection: "row",
     alignItems: "center",
 		justifyContent: 'center',
     gap: 10,
-    backgroundColor: "#007bff",
     paddingVertical: 10,
     paddingHorizontal: 32,
     borderRadius: 20,
